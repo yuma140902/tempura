@@ -11,6 +11,8 @@ use walkdir::WalkDir;
 
 pub mod cli;
 pub mod directory;
+pub mod generator;
+pub mod project_config;
 
 pub fn split_frontmatter(text: &str) -> (Option<String>, String) {
     if let Some((front, body)) = matter::matter(text) {
