@@ -9,6 +9,11 @@ Static site generator (SSG) using handlebars and pulldown-cmark, written in Rust
 cargo install tempura
 ```
 
+## Example
+
+- Repo: <https://github.com/yuma140902/tempura-example>
+- Generated website: <https://yuma140902.github.io/tempura-example/sample.html>
+
 ## Usage
 
 ### 1. Setup project
