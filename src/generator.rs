@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::{collections::HashMap, path::Path};
 
 use echo_generator::EchoGenerator;
@@ -5,7 +6,7 @@ use handlebars_generator::HandlebarsGenerator;
 
 use crate::project_config::GeneratorRule;
 
-pub trait Generator {
+pub trait Generator: Debug {
     fn generate(
         &self,
         input_filepath: &Path,
@@ -37,6 +38,7 @@ mod handlebars_generator {
     use path_absolutize::Absolutize;
     use serde_json::{Map, Value as Json};
     use serde_yaml::Value as Yaml;
+    use tracing::info;
     use walkdir::WalkDir;
 
     use crate::project_config::GeneratorRule;
@@ -65,7 +67,7 @@ mod handlebars_generator {
             handlebars
                 .register_template_file(abs_path.to_string_lossy().borrow(), &abs_path)
                 .unwrap();
-            println!("registered template: {}", abs_path.display());
+            info!("registered template: {}", abs_path.display());
         }
 
         handlebars
@@ -86,6 +88,7 @@ mod handlebars_generator {
         data
     }
 
+    #[derive(Debug)]
     pub struct HandlebarsGenerator {
         handlebars: Handlebars<'static>,
     }
@@ -146,6 +149,7 @@ mod echo_generator {
 
     use super::{Generator, GeneratorResult};
 
+    #[derive(Debug)]
     pub struct EchoGenerator;
 
     impl Generator for EchoGenerator {

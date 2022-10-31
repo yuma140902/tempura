@@ -7,6 +7,7 @@ use std::{
 
 use generator::Generator;
 use project_config::GeneratorRule;
+use tracing::{error, info};
 use walkdir::WalkDir;
 
 use crate::project_config::ProjectConfig;
@@ -16,9 +17,9 @@ pub mod directory;
 pub mod generator;
 pub mod project_config;
 
-fn single_generate(
+fn build_single_file(
     filepath: PathBuf,
-    project_root: impl AsRef<Path>,
+    project_root: &Path,
     rule: Option<&GeneratorRule>,
     generators: &HashMap<String, Box<dyn Generator>>,
 ) -> io::Result<()> {
@@ -39,10 +40,11 @@ fn single_generate(
     if let Some(ref export_extension) = rule.export_extension {
         output_filepath.set_extension(export_extension);
     }
-    println!(
-        "generating {} -> {}",
+    info!(
+        "generating {} from {} with generator '{}'",
+        output_filepath.display(),
         filepath.display(),
-        output_filepath.display()
+        rule.generator,
     );
 
     let generator = generators.get(&rule.generator).unwrap();
@@ -51,7 +53,8 @@ fn single_generate(
     Ok(())
 }
 
-pub fn generate(project_root: impl AsRef<Path>) -> io::Result<()> {
+#[tracing::instrument]
+pub fn build(project_root: &Path) -> io::Result<()> {
     let pages_directory = directory::get_pages_directory(&project_root);
     let project_config_path = directory::get_project_config_path(&project_root);
     let config = {
@@ -81,11 +84,11 @@ pub fn generate(project_root: impl AsRef<Path>) -> io::Result<()> {
             }
         }
 
-        let result = single_generate(filepath, &project_root, selected_rule, &generators);
+        let result = build_single_file(filepath, &project_root, selected_rule, &generators);
         if let Err(err) = result {
-            eprintln!("error: {:?}", err);
+            error!("error: {:?}", err);
         }
     }
-    println!("Done.");
+    info!("Done.");
     Ok(())
 }

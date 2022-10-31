@@ -2,15 +2,27 @@ use std::{fs, io};
 
 use clap::Parser;
 use tempura::{
+    build,
     cli::{Cli, Commands},
-    directory, generate,
+    directory,
     project_config::ProjectConfig,
 };
+use tracing::{debug, info};
 
 fn main() -> io::Result<()> {
     let cli = Cli::parse();
+
     #[cfg(debug_assertions)]
-    println!("{:?}", cli);
+    let subscriber = tracing_subscriber::FmtSubscriber::builder()
+        .with_max_level(tracing::Level::DEBUG)
+        .finish();
+    #[cfg(not(debug_assertions))]
+    let subscriber = tracing_subscriber::FmtSubscriber::builder()
+        .with_max_level(tracing::Level::INFO)
+        .finish();
+    tracing::subscriber::set_global_default(subscriber).unwrap();
+
+    debug!("{:?}", cli);
 
     match &cli.command {
         Commands::Init { directory } => {
@@ -25,7 +37,7 @@ fn main() -> io::Result<()> {
                 pages.join("sub_dir/sample2.md"),
                 include_str!("../resources/sample2.md"),
             )?;
-            println!("setup pages directory: {}", pages.display());
+            info!("setup pages directory: {}", pages.display());
 
             let templates = directory.join("src").join("templates");
             fs::create_dir_all(&templates)?;
@@ -33,21 +45,21 @@ fn main() -> io::Result<()> {
                 templates.join("page.html.hbs"),
                 include_str!("../resources/page.html.hbs"),
             )?;
-            println!("setup templates directory: {}", templates.display());
+            info!("setup templates directory: {}", templates.display());
 
             let output = directory::get_output_directory(&directory);
             fs::create_dir_all(&output)?;
-            println!("setup output directory: {}", output.display());
+            info!("setup output directory: {}", output.display());
 
             let config_file = directory::get_project_config_path(&directory);
             let config = ProjectConfig::default();
             let config_json = serde_json::to_string_pretty(&config)?;
             fs::write(&config_file, config_json)?;
-            println!("setup project config file: {}", config_file.display());
+            info!("setup project config file: {}", config_file.display());
 
-            println!("setup done.");
+            info!("setup done.");
         }
-        Commands::Build { directory } => generate(directory)?,
+        Commands::Build { directory } => build(directory)?,
     }
 
     Ok(())
