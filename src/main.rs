@@ -1,3 +1,8 @@
+use clap::Parser;
+use tempura::Cli;
+
 fn main() {
-    println!("Hello, world!");
+    let cli = Cli::parse();
+
+    println!("{:?}", cli);
 }
