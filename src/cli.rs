@@ -15,7 +15,7 @@ pub enum Commands {
         #[arg(default_value = ".")]
         directory: PathBuf,
     },
-    Gen {
+    Build {
         #[arg(default_value = ".")]
         directory: PathBuf,
     },

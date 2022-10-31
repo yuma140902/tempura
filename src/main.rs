@@ -39,7 +39,7 @@ fn main() -> io::Result<()> {
 
             println!("setup done.");
         }
-        Commands::Gen { directory } => generate(directory)?,
+        Commands::Build { directory } => generate(directory)?,
     }
 
     Ok(())
