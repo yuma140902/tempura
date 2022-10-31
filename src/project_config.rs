@@ -37,7 +37,7 @@ impl Default for ProjectConfig {
                     generator: "handlebars".to_owned(),
                     export_base: None,
                     export_extension: Some("html".to_owned()),
-                    template: Some("page.html.hbs".to_owned()),
+                    template: Some("src/templates/page.html.hbs".to_owned()),
                 }],
             },
         }

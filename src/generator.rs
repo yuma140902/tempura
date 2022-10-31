@@ -10,6 +10,7 @@ pub trait Generator {
         &self,
         input_filepath: &Path,
         output_filepath: &Path,
+        project_root: &Path,
         rule: &GeneratorRule,
     ) -> GeneratorResult;
 }
@@ -33,11 +34,12 @@ mod handlebars_generator {
     use std::{borrow::Borrow, fs, path::Path};
 
     use handlebars::{handlebars_helper, Handlebars};
+    use path_absolutize::Absolutize;
     use serde_json::{Map, Value as Json};
     use serde_yaml::Value as Yaml;
     use walkdir::WalkDir;
 
-    use crate::{directory, project_config::GeneratorRule};
+    use crate::project_config::GeneratorRule;
 
     use super::{Generator, GeneratorResult};
 
@@ -49,21 +51,21 @@ mod handlebars_generator {
         html_output
     });
 
-    fn setup_handlebars(templates_directory: impl AsRef<Path>) -> Handlebars<'static> {
+    fn setup_handlebars(project_root: impl AsRef<Path>) -> Handlebars<'static> {
         let mut handlebars = Handlebars::new();
         handlebars.register_helper("md2html", Box::new(md2html));
 
-        for path in WalkDir::new(&templates_directory)
+        for path in WalkDir::new(project_root.as_ref().join("src"))
             .into_iter()
             .filter_map(|e| e.ok())
             .map(|e| e.path().to_path_buf())
             .filter(|p| p.is_file() && p.extension().map(|ext| ext == "hbs").unwrap_or(false))
         {
-            let relative_path = directory::get_relative_path(&path, &templates_directory);
+            let abs_path = path.absolutize().unwrap();
             handlebars
-                .register_template_file(relative_path.to_string_lossy().borrow(), path)
+                .register_template_file(abs_path.to_string_lossy().borrow(), &abs_path)
                 .unwrap();
-            println!("registered template: {}", relative_path.display());
+            println!("registered template: {}", abs_path.display());
         }
 
         handlebars
@@ -90,9 +92,8 @@ mod handlebars_generator {
 
     impl HandlebarsGenerator {
         pub fn new(project_root: impl AsRef<Path>) -> Self {
-            let templates_directory = directory::get_templates_directory(&project_root);
             Self {
-                handlebars: setup_handlebars(&templates_directory),
+                handlebars: setup_handlebars(&project_root),
             }
         }
     }
@@ -102,6 +103,7 @@ mod handlebars_generator {
             &self,
             input_filepath: &Path,
             output_filepath: &Path,
+            project_root: &Path,
             rule: &GeneratorRule,
         ) -> GeneratorResult {
             let content = fs::read_to_string(&input_filepath).unwrap();
@@ -113,7 +115,18 @@ mod handlebars_generator {
 
             let html_output = self
                 .handlebars
-                .render(rule.template.as_deref().unwrap_or("page.html.hbs"), &data)
+                .render(
+                    Path::new(
+                        rule.template
+                            .as_deref()
+                            .unwrap_or("src/templates/page.html.hbs"),
+                    )
+                    .absolutize_from(project_root.absolutize().unwrap().borrow())
+                    .unwrap()
+                    .to_string_lossy()
+                    .borrow(),
+                    &data,
+                )
                 .unwrap();
 
             if let Some(parent) = output_filepath.parent() {
@@ -127,7 +140,7 @@ mod handlebars_generator {
 }
 
 mod echo_generator {
-    use std::fs;
+    use std::{fs, path::Path};
 
     use crate::project_config::GeneratorRule;
 
@@ -140,6 +153,7 @@ mod echo_generator {
             &self,
             input_filepath: &std::path::Path,
             output_filepath: &std::path::Path,
+            _project_root: &Path,
             _rule: &GeneratorRule,
         ) -> super::GeneratorResult {
             fs::copy(input_filepath, output_filepath).unwrap();

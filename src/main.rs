@@ -27,7 +27,7 @@ fn main() -> io::Result<()> {
             )?;
             println!("setup pages directory: {}", pages.display());
 
-            let templates = directory::get_templates_directory(&directory);
+            let templates = directory.join("src").join("templates");
             fs::create_dir_all(&templates)?;
             fs::write(
                 templates.join("page.html.hbs"),
