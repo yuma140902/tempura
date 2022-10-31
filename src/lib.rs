@@ -4,32 +4,13 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use clap::{Parser, Subcommand};
 use handlebars::{handlebars_helper, Handlebars};
 use serde_json::{Map, Value as Json};
 use serde_yaml::Value as Yaml;
 use walkdir::WalkDir;
 
+pub mod cli;
 pub mod directory;
-
-#[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
-pub struct Cli {
-    #[command(subcommand)]
-    pub command: Commands,
-}
-
-#[derive(Subcommand, Debug)]
-pub enum Commands {
-    Init {
-        #[arg(default_value = ".")]
-        directory: PathBuf,
-    },
-    Gen {
-        #[arg(default_value = ".")]
-        directory: PathBuf,
-    },
-}
 
 pub fn split_frontmatter(text: &str) -> (Option<String>, String) {
     if let Some((front, body)) = matter::matter(text) {

@@ -1,7 +1,10 @@
 use std::{fs, io};
 
 use clap::Parser;
-use tempura::{directory, generate, Cli, Commands};
+use tempura::{
+    cli::{Cli, Commands},
+    directory, generate,
+};
 
 fn main() -> io::Result<()> {
     let cli = Cli::parse();
