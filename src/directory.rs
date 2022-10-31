@@ -15,3 +15,7 @@ pub fn get_templates_directory(project_root: impl AsRef<Path>) -> PathBuf {
 pub fn get_output_directory(project_root: impl AsRef<Path>) -> PathBuf {
     project_root.as_ref().join("public")
 }
+
+pub fn get_relative_path(file: impl AsRef<Path>, base_directory: impl AsRef<Path>) -> PathBuf {
+    pathdiff::diff_paths(file, base_directory).unwrap()
+}

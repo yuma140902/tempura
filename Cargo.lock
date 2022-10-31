@@ -449,6 +449,7 @@ dependencies = [
  "clap",
  "handlebars",
  "matter",
+ "once_cell",
  "pathdiff",
  "pulldown-cmark",
  "regex",

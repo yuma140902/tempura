@@ -1,7 +1,6 @@
 ---
 title: Page A
 author: yuma
-template: page.html.hbs
 ---
 # Page in a sub directory
 
