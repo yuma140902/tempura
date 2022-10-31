@@ -1,0 +1,23 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: #afc2e0;
+}
+
+.main {
+  flex-grow: 1;
+  margin: 8px;
+}
+
+.footer {
+  background: #afc2e0;
+}

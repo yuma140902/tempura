@@ -1,5 +1,5 @@
 ---
-title: Page A
+title: Page 2
 author: yuma
 ---
 # Page in a sub directory
