@@ -37,6 +37,14 @@ pub fn get_output_directory(root_directory: impl AsRef<Path>) -> PathBuf {
     root_directory.as_ref().join("public")
 }
 
+pub fn split_frontmatter(text: &str) -> (Option<String>, String) {
+    if let Some((front, body)) = matter::matter(text) {
+        (Some(front), body)
+    } else {
+        (None, text.to_owned())
+    }
+}
+
 fn single_generate(
     filepath: PathBuf,
     pages_directory: impl AsRef<Path>,
@@ -53,10 +61,10 @@ fn single_generate(
     );
 
     let content = fs::read_to_string(filepath)?;
-    let (maybe_yaml, markdown) = frontmatter::parse_and_find_content(&content).unwrap();
+    let (_maybe_yaml, markdown) = split_frontmatter(&content);
 
     let mut options = pulldown_cmark::Options::empty();
-    let parser = pulldown_cmark::Parser::new_ext(markdown, options);
+    let parser = pulldown_cmark::Parser::new_ext(&markdown, options);
     let mut html_output = String::new();
     pulldown_cmark::html::push_html(&mut html_output, parser);
 
