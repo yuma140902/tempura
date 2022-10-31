@@ -10,6 +10,8 @@ use serde_json::{Map, Value as Json};
 use serde_yaml::Value as Yaml;
 use walkdir::WalkDir;
 
+pub mod directory;
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
@@ -27,18 +29,6 @@ pub enum Commands {
         #[arg(default_value = ".")]
         directory: PathBuf,
     },
-}
-
-pub fn get_pages_directory(root_directory: impl AsRef<Path>) -> PathBuf {
-    root_directory.as_ref().join("pages")
-}
-
-pub fn get_templates_directory(root_directory: impl AsRef<Path>) -> PathBuf {
-    root_directory.as_ref().join("templates")
-}
-
-pub fn get_output_directory(root_directory: impl AsRef<Path>) -> PathBuf {
-    root_directory.as_ref().join("public")
 }
 
 pub fn split_frontmatter(text: &str) -> (Option<String>, String) {
@@ -133,9 +123,9 @@ fn setup_handlebars(templates_directory: impl AsRef<Path>) -> Handlebars<'static
 }
 
 pub fn generate(root_directory: impl AsRef<Path>) -> io::Result<()> {
-    let pages_directory = get_pages_directory(&root_directory);
-    let templates_directory = get_templates_directory(&root_directory);
-    let output_directory = get_output_directory(&root_directory);
+    let pages_directory = directory::get_pages_directory(&root_directory);
+    let templates_directory = directory::get_templates_directory(&root_directory);
+    let output_directory = directory::get_output_directory(&root_directory);
 
     let handlebars = setup_handlebars(templates_directory);
 
