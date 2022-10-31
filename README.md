@@ -24,10 +24,13 @@ The following directories and files will be created.
 
 ```
 my_project
+│  tempura.json
+│
 ├─public
 └─src
     ├─pages
     │  │  sample.md
+    │  │  style.css
     │  │
     │  └─sub_dir
     │          sample2.md
