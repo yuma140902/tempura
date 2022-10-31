@@ -8,6 +8,7 @@ use tempura::{
 
 fn main() -> io::Result<()> {
     let cli = Cli::parse();
+    #[cfg(debug_assertions)]
     println!("{:?}", cli);
 
     match &cli.command {
