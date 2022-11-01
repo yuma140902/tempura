@@ -2,7 +2,6 @@
 
 Static site generator (SSG) using handlebars and pulldown-cmark, written in Rust.
 
-
 ## Installation
 
 ```sh
@@ -22,7 +21,7 @@ Run `tempura init my_project`.
 
 The following directories and files will be created.
 
-```
+```text
 my_project
 │  tempura.json
 │
@@ -43,13 +42,13 @@ my_project
 
 Edit template files and markdown files as you like.
 
-See also [Handlebars Lanugage Guide](https://handlebarsjs.com/guide/) and [CommonMark Specification](https://spec.commonmark.org/current/). It is possible to write front matter, which is out of CommonMark specification.
+See also [Handlebars Language Guide](https://handlebarsjs.com/guide/) and [CommonMark Specification](https://spec.commonmark.org/current/). It is possible to write front matter, which is out of CommonMark specification.
 
 ### 3. Build
 
 Run `cd my_project && tempura build`.
 
-HTML files are generated in `my_project/public/` directory.
+HTML files are generated in the `my_project/public/` directory.
 
 ### 4. Deploy
 
