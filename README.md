@@ -13,6 +13,10 @@ cargo install tempura
 - Repo: <https://github.com/yuma140902/tempura-example>
 - Generated website: <https://yuma140902.github.io/tempura-example/sample.html>
 
+## Documentation
+
+https://yuma140902.github.io/tempura-doc/
+
 ## Usage
 
 ### 1. Setup project
