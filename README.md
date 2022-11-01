@@ -1,6 +1,6 @@
 # Tempura
 
-Static site generator (SSG) using handlebars and pulldown-cmark, written in Rust.
+Tempura is a Static Site Generator (SSG) written in Rust. It can generate HTML from Markdown documents and Handlebars templates. It can also handle static content including images and CSS files, and resolve paths accurately.
 
 ## Installation
 
