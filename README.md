@@ -13,7 +13,7 @@ cargo install tempura
 ### WebTools
 
 - Repo: <https://github.com/yuma140902/webtools>
-- Generated website: <https://yuma-mc.f5.si/webtools/>
+- Generated website: <https://www.yuma14.net/webtools/>
 
 ### tempura-example
 
