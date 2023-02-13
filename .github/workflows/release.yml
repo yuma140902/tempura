@@ -74,14 +74,14 @@ jobs:
         7z a     ../../../${{ env.PJ_NAME }}-${{ matrix.target }}.zip    ${{ env.PJ_NAME }}.exe
         cd -
     
-    - name: Release | Upload artifacts [-nix]
+    - name: Post Build | Upload artifacts [-nix]
       uses: actions/upload-artifact@v3
       if: matrix.os != 'windows-latest'
       with:
         name: ${{ env.PJ_NAME }}-${{ matrix.target }}.tar.gz
         path: ${{ env.PJ_NAME }}-${{ matrix.target }}.tar.gz
     
-    - name: Release | Upload artifacts [Windows]
+    - name: Post Build | Upload artifacts [Windows]
       uses: actions/upload-artifact@v3
       if: matrix.os == 'windows-latest'
       with:
@@ -94,15 +94,16 @@ jobs:
     outputs:
       changelog: ${{ steps.changelog.outputs.changes }}
     steps:
-      - name: Checkout Code
+      - name: Setup | Checkout Code
         uses: actions/checkout@v3
-        
-      - name: Update CHANGELOG
-        id: changelog
-        uses: requarks/changelog-action@v1
-        with:
-          token: ${{ github.token }}
-          tag: ${{ github.ref_name }}
+      
+      - name: Setup | Install git-chglog
+        run: go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
+      
+      - name: Generate changelog
+        run: |
+          git-chglog ${{ github.ref_name }} > CHANGELOG-${{ github.ref_name }}.md
+          git-chglog > CHANGELOG.md
       
       - name: Commit CHANGELOG.md
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -110,6 +111,12 @@ jobs:
           branch: master
           commit_message: 'docs: update CHANGELOG.md for ${{ github.ref_name }} [skip ci]'
           file_pattern: CHANGELOG.md
+          
+      - name: Upload CHANGELOG-${{ github.ref_name }}.md
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelog
+          path: CHANGELOG-${{ github.ref_name }}.md
 
   github_release:
     name: Make a new GitHub release for ${{ github.ref_name }}
@@ -118,10 +125,13 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
+    
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
         
       - name: Add Artifacts to Release
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ env.PJ_NAME }}-*/${{ env.PJ_NAME }}-*
-          body: ${{ needs.changelog.outputs.changelog }}
+          body_path: changelog/CHANGELOG-${{ github.ref_name }}.md
           tag_name: ${{ github.ref_name }}
