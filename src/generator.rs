@@ -69,12 +69,12 @@ mod handlebars_generator {
     ) -> HelperResult {
         let target_input_path = PathBuf::from(h.param(0).and_then(|v| v.value().as_str()).unwrap());
         let project_root = PathBuf::from(ctx.data().get("project_root").unwrap().render().as_str());
-        let output_directory = directory::get_output_directory(&project_root);
+        let output_directory = directory::get_output_directory(project_root);
         let self_output_filepath =
             PathBuf::from(ctx.data().get("output_file").unwrap().render().as_str());
         let self_output_parent = self_output_filepath.parent().unwrap();
 
-        let target_output_path = output_directory.join(&target_input_path); //TODO:
+        let target_output_path = output_directory.join(target_input_path); //TODO:
                                                                             //rule.export_extension
                                                                             //rule.export_base
         let relative_path = directory::get_relative_path(target_output_path, self_output_parent);
@@ -157,7 +157,7 @@ mod handlebars_generator {
             project_root: &Path,
             rule: &GeneratorRule,
         ) -> GeneratorResult {
-            let content = fs::read_to_string(&input_filepath).unwrap();
+            let content = fs::read_to_string(input_filepath).unwrap();
             let (maybe_yaml, content) = split_frontmatter(&content);
             let yaml = maybe_yaml.unwrap();
             let yaml: Yaml = serde_yaml::from_str(&yaml).unwrap();
@@ -165,9 +165,9 @@ mod handlebars_generator {
             let data = make_data(
                 &yaml,
                 content,
-                &input_filepath,
-                &output_filepath,
-                &project_root,
+                input_filepath,
+                output_filepath,
+                project_root,
             );
 
             let html_output = self
@@ -189,7 +189,7 @@ mod handlebars_generator {
             if let Some(parent) = output_filepath.parent() {
                 fs::create_dir_all(parent).unwrap();
             }
-            fs::write(&output_filepath, html_output).unwrap();
+            fs::write(output_filepath, html_output).unwrap();
 
             GeneratorResult::Success
         }

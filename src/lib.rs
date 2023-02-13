@@ -29,8 +29,8 @@ fn build_single_file(
         Cow::Owned(GeneratorRule::default())
     };
 
-    let pages_directory = directory::get_pages_directory(&project_root);
-    let mut output_directory = directory::get_output_directory(&project_root);
+    let pages_directory = directory::get_pages_directory(project_root);
+    let mut output_directory = directory::get_output_directory(project_root);
     if let Some(ref export_base) = rule.export_base {
         output_directory = output_directory.join(export_base);
     }
@@ -55,8 +55,8 @@ fn build_single_file(
 
 #[tracing::instrument]
 pub fn build(project_root: &Path) -> io::Result<()> {
-    let pages_directory = directory::get_pages_directory(&project_root);
-    let project_config_path = directory::get_project_config_path(&project_root);
+    let pages_directory = directory::get_pages_directory(project_root);
+    let project_config_path = directory::get_project_config_path(project_root);
     let config = {
         let mut config: ProjectConfig =
             serde_json::from_str(&fs::read_to_string(project_config_path)?)?;
@@ -64,7 +64,7 @@ pub fn build(project_root: &Path) -> io::Result<()> {
         config
     };
 
-    let generators = generator::get_generators(&project_root);
+    let generators = generator::get_generators(project_root);
 
     for filepath in WalkDir::new(&pages_directory)
         .into_iter()
@@ -84,7 +84,7 @@ pub fn build(project_root: &Path) -> io::Result<()> {
             }
         }
 
-        let result = build_single_file(filepath, &project_root, selected_rule, &generators);
+        let result = build_single_file(filepath, project_root, selected_rule, &generators);
         if let Err(err) = result {
             error!("error: {:?}", err);
         }
@@ -95,7 +95,7 @@ pub fn build(project_root: &Path) -> io::Result<()> {
 
 #[tracing::instrument]
 pub fn init(project_root: &Path) -> io::Result<()> {
-    let pages = directory::get_pages_directory(&project_root);
+    let pages = directory::get_pages_directory(project_root);
     fs::create_dir_all(&pages)?;
     fs::write(
         pages.join("sample.md"),
@@ -120,11 +120,11 @@ pub fn init(project_root: &Path) -> io::Result<()> {
     )?;
     info!("setup templates directory: {}", templates.display());
 
-    let output = directory::get_output_directory(&project_root);
+    let output = directory::get_output_directory(project_root);
     fs::create_dir_all(&output)?;
     info!("setup output directory: {}", output.display());
 
-    let config_file = directory::get_project_config_path(&project_root);
+    let config_file = directory::get_project_config_path(project_root);
     let config = ProjectConfig::default();
     let config_json = serde_json::to_string_pretty(&config)?;
     fs::write(&config_file, config_json)?;
