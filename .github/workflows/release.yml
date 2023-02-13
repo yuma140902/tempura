@@ -96,6 +96,8 @@ jobs:
     steps:
       - name: Setup | Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       
       - name: Setup | Go
         uses: actions/setup-go@v3
@@ -105,8 +107,8 @@ jobs:
       
       - name: Generate changelog
         run: |
-          /home/runner/go/bin/git-chglog ${{ github.ref_name }} > CHANGELOG-${{ github.ref_name }}.md
-          /home/runner/go/bin/git-chglog ..${{ github.ref_name }} > CHANGELOG.md
+          /home/runner/go/bin/git-chglog ${{ github.ref_name }} | tee CHANGELOG-${{ github.ref_name }}.md
+          /home/runner/go/bin/git-chglog ..${{ github.ref_name }} | tee CHANGELOG.md
       
       - name: Commit CHANGELOG.md
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -132,9 +134,6 @@ jobs:
     needs: [build, changelog]
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-    
       - name: Download artifacts
         uses: actions/download-artifact@v3
         
