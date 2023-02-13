@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_and_test:
+    name: Build and Test on ${{ matrix.os }} with Rust ${{ matrix.cargo }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable]
+      
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Setup | Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup | Cache
+        uses: Swatinem/rust-cache@v2
+      
+      - name: Setup | Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: ${{ matrix.rust }}
+            default: true
+            override: true
+        
+      - name: Setup | cargo-all-features
+        uses: baptiste0928/cargo-install@v1.3.0
+        with:
+          crate: cargo-all-features
+      
+      - name: Build
+        run: cargo build-all-features --verbose
+        
+      - name: Test
+        run: cargo test
+      
+      - name: Format
+        run: cargo fmt --all -- --check
+
+      - name: Lint
+        run: cargo clippy --tests --workspace -- -D warnings
