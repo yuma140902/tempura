@@ -81,7 +81,7 @@ jobs:
         name: ${{ env.PJ_NAME }}-${{ matrix.target }}.tar.gz
         path: ${{ env.PJ_NAME }}-${{ matrix.target }}.tar.gz
     
-    - name: Release | Upload artifacts [-nix]
+    - name: Release | Upload artifacts [Windows]
       uses: actions/upload-artifact@v3
       if: matrix.os == 'windows-latest'
       with:
