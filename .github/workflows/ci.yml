@@ -11,7 +11,7 @@ env:
 
 jobs:
   build_and_test:
-    name: Build and Test on ${{ matrix.os }} with Rust ${{ matrix.cargo }}
+    name: Build and Test on ${{ matrix.os }} with Rust ${{ matrix.rust }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
