@@ -97,6 +97,9 @@ jobs:
       - name: Setup | Checkout Code
         uses: actions/checkout@v3
       
+      - name: Setup | Go
+        uses: actions/setup-go@v3
+      
       - name: Setup | Install git-chglog
         run: go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
       
