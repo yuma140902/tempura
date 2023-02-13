@@ -27,7 +27,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
       
       - name: Setup | Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.6
         with:
             toolchain: ${{ matrix.rust }}
             default: true
