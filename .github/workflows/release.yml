@@ -105,8 +105,8 @@ jobs:
       
       - name: Generate changelog
         run: |
-          $GOPATH/bin/git-chglog ${{ github.ref_name }} > CHANGELOG-${{ github.ref_name }}.md
-          $GOPATH/bin/git-chglog > CHANGELOG.md
+          /home/runner/go/bin/git-chglog ${{ github.ref_name }} > CHANGELOG-${{ github.ref_name }}.md
+          /home/runner/go/bin/git-chglog > CHANGELOG.md
       
       - name: Commit CHANGELOG.md
         uses: stefanzweifel/git-auto-commit-action@v4
