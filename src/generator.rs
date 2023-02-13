@@ -75,8 +75,8 @@ mod handlebars_generator {
         let self_output_parent = self_output_filepath.parent().unwrap();
 
         let target_output_path = output_directory.join(target_input_path); //TODO:
-                                                                            //rule.export_extension
-                                                                            //rule.export_base
+                                                                           //rule.export_extension
+                                                                           //rule.export_base
         let relative_path = directory::get_relative_path(target_output_path, self_output_parent);
         write!(out, "{}", relative_path.display()).unwrap();
         Ok(())
