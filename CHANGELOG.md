@@ -15,11 +15,13 @@
 
 ### :construction_worker: Build System
 
+* publish to crates.io
 * use git-chglog in release workflow
 * change docs: to doc:
 
 ### :memo: Documentation Changes
 
+* update CHANGELOG.md for v0.2.1 [skip ci]
 * update CHANGELOG.md for v0.2.5 [skip ci]
 * update CHANGELOG.md for v0.2.4 [skip ci]
 
