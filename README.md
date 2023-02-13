@@ -4,8 +4,20 @@ Tempura is a Static Site Generator (SSG) written in Rust. It can generate HTML f
 
 ## Installation
 
+### Build from source
+
 ```sh
 cargo install tempura
+```
+
+### Install binary
+
+You can download a binary from [releases page](https://github.com/yuma140902/tempura/releases).
+
+Or you can download with [cargo-binstall](https://github.com/cargo-bins/cargo-binstall).
+
+```sh
+cargo binstall tempura
 ```
 
 ## Example
@@ -24,7 +36,7 @@ cargo install tempura
 
 https://yuma140902.github.io/tempura-doc/
 
-## Usage
+## General Usage
 
 ### 1. Setup project
 
