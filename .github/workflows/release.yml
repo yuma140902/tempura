@@ -143,3 +143,14 @@ jobs:
           files: ${{ env.PJ_NAME }}-*/${{ env.PJ_NAME }}-*
           body_path: changelog/CHANGELOG-${{ github.ref_name }}.md
           tag_name: ${{ github.ref_name }}
+
+  crates_io_publish:
+    name: Publish ${{ github.ref_name }} to Crates.io
+    needs: [build, changelog]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup | Checkout
+        uses: actions/checkout@v3
+      
+      - name: Publish
+        run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
