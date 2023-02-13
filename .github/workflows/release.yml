@@ -106,7 +106,7 @@ jobs:
       - name: Generate changelog
         run: |
           /home/runner/go/bin/git-chglog ${{ github.ref_name }} > CHANGELOG-${{ github.ref_name }}.md
-          /home/runner/go/bin/git-chglog > CHANGELOG.md
+          /home/runner/go/bin/git-chglog ..${{ github.ref_name }} > CHANGELOG.md
       
       - name: Commit CHANGELOG.md
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -120,6 +120,12 @@ jobs:
         with:
           name: changelog
           path: CHANGELOG-${{ github.ref_name }}.md
+          
+      - name: Upload CHANGELOG.md
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelog-all
+          path: CHANGELOG.md
 
   github_release:
     name: Make a new GitHub release for ${{ github.ref_name }}
