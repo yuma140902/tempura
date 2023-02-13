@@ -22,6 +22,7 @@
 ### :memo: Documentation Changes
 
 * update CHANGELOG.md for v0.2.1 [skip ci]
+* update CHANGELOG.md for v0.2.1 [skip ci]
 * update CHANGELOG.md for v0.2.5 [skip ci]
 * update CHANGELOG.md for v0.2.4 [skip ci]
 
