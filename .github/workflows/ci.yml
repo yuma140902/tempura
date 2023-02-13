@@ -11,11 +11,10 @@ env:
 
 jobs:
   build_and_test:
-    name: Build and Test on ${{ matrix.os }} with Rust ${{ matrix.rust }}
+    name: Build and Test on ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable]
       
     runs-on: ${{ matrix.os }}
     
@@ -42,13 +41,6 @@ jobs:
 
       - name: Setup | Restore mtime
         run: python3 ./.github/scripts/git-restore-mtime.py
-      
-      - name: Setup | Toolchain
-        uses: actions-rs/toolchain@v1.0.6
-        with:
-            toolchain: ${{ matrix.rust }}
-            default: true
-            override: true
         
       - name: Setup | cargo-all-features
         uses: baptiste0928/cargo-install@v1.3.0
