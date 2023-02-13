@@ -1,0 +1,33 @@
+style: github
+template: CHANGELOG.tpl.md
+info:
+  title: CHANGELOG
+  repository_url: https://github.com/yuma140902/tempura
+options:
+  commits:
+    # filters:
+    #   Type:
+    #     - feat
+    #     - fix
+    #     - perf
+    #     - refactor
+  commit_groups:
+    sort_by: RawTitle
+    title_maps:
+      feat: ":sparkles: Features"
+      fix: ":bug: Bug Fixes"
+      perf: ":zap: Performance Improvements"
+      refactor: ":recycle: Code Refactoring"
+      test: ":white_check_mark: Tests"
+      ci: ":construction_worker: Build System"
+      doc: ":memo: Documentation Changes"
+      chore: ":wrench: Chores"
+  header:
+    pattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$"
+    pattern_maps:
+      - Type
+      - Scope
+      - Subject
+  notes:
+    keywords:
+      - BREAKING CHANGE
