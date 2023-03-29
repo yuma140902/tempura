@@ -159,8 +159,9 @@ mod handlebars_generator {
         ) -> GeneratorResult {
             let content = fs::read_to_string(input_filepath).unwrap();
             let (maybe_yaml, content) = split_frontmatter(&content);
-            let yaml = maybe_yaml.unwrap();
-            let yaml: Yaml = serde_yaml::from_str(&yaml).unwrap();
+            let yaml = maybe_yaml
+                .and_then(|yaml| serde_yaml::from_str(&yaml).ok())
+                .unwrap_or_default();
 
             let data = make_data(
                 &yaml,
