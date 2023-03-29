@@ -48,7 +48,9 @@ fn build_single_file(
     );
 
     let generator = generators.get(&rule.generator).unwrap();
-    generator.generate(&filepath, &output_filepath, project_root.as_ref(), &rule);
+    generator
+        .generate(&filepath, &output_filepath, project_root.as_ref(), &rule)
+        .unwrap();
 
     Ok(())
 }
