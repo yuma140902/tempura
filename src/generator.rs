@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::fmt::Debug;
 use std::{collections::HashMap, path::Path};
 
@@ -16,10 +17,12 @@ pub trait Generator: Debug {
     ) -> GeneratorResult;
 }
 
-pub enum GeneratorResult {
-    Success,
-    Fail,
-}
+//pub enum GeneratorResult {
+//   Success,
+//  Fail,
+//}
+
+type GeneratorResult = Result<(), Box<dyn Error>>;
 
 pub fn get_generators(project_root: impl AsRef<Path>) -> HashMap<String, Box<dyn Generator>> {
     let mut map: HashMap<String, Box<dyn Generator>> = HashMap::new();
@@ -192,7 +195,7 @@ mod handlebars_generator {
             }
             fs::write(output_filepath, html_output).unwrap();
 
-            GeneratorResult::Success
+            Ok(())
         }
     }
 }
@@ -202,7 +205,7 @@ mod echo_generator {
 
     use crate::project_config::GeneratorRule;
 
-    use super::{Generator, GeneratorResult};
+    use super::Generator;
 
     #[derive(Debug)]
     pub struct EchoGenerator;
@@ -217,7 +220,7 @@ mod echo_generator {
         ) -> super::GeneratorResult {
             fs::copy(input_filepath, output_filepath).unwrap();
 
-            GeneratorResult::Success
+            Ok(())
         }
     }
 }
