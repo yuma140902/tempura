@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::fmt::Debug;
 use std::{collections::HashMap, path::Path};
 
@@ -22,7 +21,7 @@ pub trait Generator: Debug {
 //  Fail,
 //}
 
-type GeneratorResult = Result<(), Box<dyn Error>>;
+type GeneratorResult = Result<(), anyhow::Error>;
 
 pub fn get_generators(project_root: impl AsRef<Path>) -> HashMap<String, Box<dyn Generator>> {
     let mut map: HashMap<String, Box<dyn Generator>> = HashMap::new();
@@ -41,6 +40,7 @@ mod handlebars_generator {
         path::{Path, PathBuf},
     };
 
+    use anyhow::Context as _;
     use handlebars::{
         handlebars_helper, Context, Handlebars, Helper, HelperResult, JsonRender, Output,
         RenderContext,
@@ -160,11 +160,14 @@ mod handlebars_generator {
             project_root: &Path,
             rule: &GeneratorRule,
         ) -> GeneratorResult {
-            let content = fs::read_to_string(input_filepath).unwrap();
+            let content = fs::read_to_string(input_filepath)
+                .context(format!("Reading {:?}", input_filepath))?;
             let (maybe_yaml, content) = split_frontmatter(&content);
-            let yaml = maybe_yaml
-                .and_then(|yaml| serde_yaml::from_str(&yaml).ok())
-                .unwrap_or_default();
+            let yaml = match maybe_yaml {
+                Some(yaml) => serde_yaml::from_str(&yaml)
+                    .context(format!("Invalid YAML in {:?}", input_filepath))?,
+                None => serde_yaml::Value::default(),
+            };
 
             let data = make_data(
                 &yaml,
@@ -188,12 +191,13 @@ mod handlebars_generator {
                     .borrow(),
                     &data,
                 )
-                .unwrap();
+                .context(format!("Input file: {:?}", input_filepath))?;
 
             if let Some(parent) = output_filepath.parent() {
-                fs::create_dir_all(parent).unwrap();
+                fs::create_dir_all(parent).context(format!("Create directory {:?}", parent))?;
             }
-            fs::write(output_filepath, html_output).unwrap();
+            fs::write(output_filepath, html_output)
+                .context(format!("Write {:?}", output_filepath))?;
 
             Ok(())
         }
@@ -207,6 +211,8 @@ mod echo_generator {
 
     use super::Generator;
 
+    use anyhow::Context as _;
+
     #[derive(Debug)]
     pub struct EchoGenerator;
 
@@ -218,9 +224,12 @@ mod echo_generator {
             _project_root: &Path,
             _rule: &GeneratorRule,
         ) -> super::GeneratorResult {
-            fs::copy(input_filepath, output_filepath).unwrap();
-
-            Ok(())
+            fs::copy(input_filepath, output_filepath)
+                .context(format!(
+                    "Copying {:?} to {:?}",
+                    input_filepath, output_filepath
+                ))
+                .map(|_| ())
         }
     }
 }
