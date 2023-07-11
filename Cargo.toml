@@ -1,6 +1,6 @@
 [package]
 name = "tempura"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 authors = ["yuma140902"]
 description = "Static site generator (SSG) using handlebars and pulldown-cmark"
