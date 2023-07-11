@@ -1,4 +1,27 @@
 
+<a name="v0.2.2"></a>
+## [v0.2.2](https://github.com/yuma140902/tempura/compare/v0.2.1...v0.2.2)
+
+> 2023-07-12
+
+### :construction_worker: Build System
+
+* do not continue on error
+
+### :memo: Documentation Changes
+
+* add badges to readme
+* update readme
+* update CHANGELOG.md for v0.2.1 [skip ci]
+
+### Pull Requests
+
+* Merge pull request [#28](https://github.com/yuma140902/tempura/issues/28) from yuma140902/use-anyhow-context
+* Merge pull request [#27](https://github.com/yuma140902/tempura/issues/27) from yuma140902/create-parent-dirs
+* Merge pull request [#26](https://github.com/yuma140902/tempura/issues/26) from yuma140902/reduce-unwrap
+* Merge pull request [#24](https://github.com/yuma140902/tempura/issues/24) from yuma140902/enrich-generator-result
+
+
 <a name="v0.2.1"></a>
 ## [v0.2.1](https://github.com/yuma140902/tempura/compare/v0.2.0...v0.2.1)
 
