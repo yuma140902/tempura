@@ -224,6 +224,9 @@ mod echo_generator {
             _project_root: &Path,
             _rule: &GeneratorRule,
         ) -> super::GeneratorResult {
+            if let Some(parent) = output_filepath.parent() {
+                fs::create_dir_all(parent).context(format!("Create directory {:?}", parent))?;
+            }
             fs::copy(input_filepath, output_filepath)
                 .context(format!(
                     "Copying {:?} to {:?}",
