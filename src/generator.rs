@@ -43,7 +43,7 @@ mod handlebars_generator {
     use anyhow::Context as _;
     use handlebars::{
         handlebars_helper, Context, Handlebars, Helper, HelperResult, JsonRender, Output,
-        RenderContext,
+        RenderContext, RenderError,
     };
     use path_absolutize::Absolutize;
     use serde_json::{Map, Value as Json};
@@ -70,18 +70,38 @@ mod handlebars_generator {
         _rc: &mut RenderContext<'_, '_>,
         out: &mut dyn Output,
     ) -> HelperResult {
-        let target_input_path = PathBuf::from(h.param(0).and_then(|v| v.value().as_str()).unwrap());
-        let project_root = PathBuf::from(ctx.data().get("project_root").unwrap().render().as_str());
+        let target_input_path = PathBuf::from(
+            h.param(0)
+                .and_then(|v| v.value().as_str())
+                .ok_or_else(|| RenderError::new("target_input_path not specified"))?,
+        );
+        let project_root = PathBuf::from(
+            ctx.data()
+                .get("project_root")
+                .ok_or_else(|| RenderError::new("project_root not specified"))?
+                .render()
+                .as_str(),
+        );
         let output_directory = directory::get_output_directory(project_root);
-        let self_output_filepath =
-            PathBuf::from(ctx.data().get("output_file").unwrap().render().as_str());
-        let self_output_parent = self_output_filepath.parent().unwrap();
+        let self_output_filepath = PathBuf::from(
+            ctx.data()
+                .get("output_file")
+                .ok_or_else(|| RenderError::new("output_file not specified"))?
+                .render()
+                .as_str(),
+        );
+        let self_output_parent = self_output_filepath.parent().ok_or_else(|| {
+            RenderError::new(format!(
+                "could not get parent directory for output_file '{}'",
+                self_output_filepath.display()
+            ))
+        })?;
 
         let target_output_path = output_directory.join(target_input_path); //TODO:
                                                                            //rule.export_extension
                                                                            //rule.export_base
         let relative_path = directory::get_relative_path(target_output_path, self_output_parent);
-        write!(out, "{}", relative_path.display()).unwrap();
+        write!(out, "{}", relative_path.display())?;
         Ok(())
     }
 
@@ -96,9 +116,13 @@ mod handlebars_generator {
             .map(|e| e.path().to_path_buf())
             .filter(|p| p.is_file() && p.extension().map(|ext| ext == "hbs").unwrap_or(false))
         {
-            let abs_path = path.absolutize().unwrap();
+            let abs_path = path
+                .absolutize()
+                .with_context(|| format!("could not absolutize path '{}'", path.display()))
+                .unwrap();
             handlebars
                 .register_template_file(abs_path.to_string_lossy().borrow(), &abs_path)
+                .with_context(|| format!("could not register template '{}'", abs_path.display()))
                 .unwrap();
             info!("registered template: {}", abs_path.display());
         }
@@ -177,6 +201,13 @@ mod handlebars_generator {
                 project_root,
             );
 
+            let abs_project_root = project_root.absolutize().with_context(|| {
+                format!(
+                    "could not absolutize project_root '{}'",
+                    project_root.display()
+                )
+            })?;
+
             let html_output = self
                 .handlebars
                 .render(
@@ -185,8 +216,10 @@ mod handlebars_generator {
                             .as_deref()
                             .unwrap_or("src/templates/page.html.hbs"),
                     )
-                    .absolutize_from(project_root.absolutize().unwrap().borrow())
-                    .unwrap()
+                    .absolutize_from(abs_project_root.as_ref())
+                    .with_context(|| {
+                        format!("could not absolutize template '{:?}'", rule.template)
+                    })?
                     .to_string_lossy()
                     .borrow(),
                     &data,
