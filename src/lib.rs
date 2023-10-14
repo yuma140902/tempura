@@ -15,7 +15,12 @@ use crate::project_config::ProjectConfig;
 pub mod cli;
 pub mod directory;
 pub mod generator;
+mod loader;
 pub mod project_config;
+mod value;
+
+pub use loader::*;
+pub use value::*;
 
 fn build_single_file(
     filepath: PathBuf,
