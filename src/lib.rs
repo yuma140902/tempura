@@ -114,7 +114,7 @@ pub fn init(project_root: &Path) -> io::Result<()> {
     )?;
     info!("setup pages directory: {}", pages.display());
 
-    let templates = project_root.join("src").join("templates");
+    let templates = directory::get_templates_directory(project_root);
     fs::create_dir_all(&templates)?;
     fs::write(
         templates.join("page.html.hbs"),
