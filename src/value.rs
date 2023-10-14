@@ -2,4 +2,7 @@
 /// Conceptually, it is the same as JSON.
 /// It is hierarchical and has types such as object, string, and numeric.
 
-pub struct Value(pub ron::Value);
+pub enum Value {
+    RON(ron::Value),
+    YAML(serde_yaml::Value),
+}
