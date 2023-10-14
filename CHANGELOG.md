@@ -6,6 +6,7 @@
 
 ### :memo: Documentation Changes
 
+* update CHANGELOG.md for v0.2.3 [skip ci]
 * update CHANGELOG.md for v0.2.2 [skip ci]
 
 ### Pull Requests
