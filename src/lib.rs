@@ -16,6 +16,7 @@ pub mod cli;
 pub mod directory;
 pub mod generator;
 pub mod project_config;
+pub mod value;
 
 fn build_single_file(
     filepath: PathBuf,
