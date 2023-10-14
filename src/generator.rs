@@ -51,7 +51,10 @@ mod handlebars_generator {
     use tracing::info;
     use walkdir::WalkDir;
 
-    use crate::{directory, project_config::GeneratorRule};
+    use crate::{
+        directory::{self, get_templates_directory},
+        project_config::GeneratorRule,
+    };
 
     use super::{Generator, GeneratorResult};
 
@@ -110,7 +113,8 @@ mod handlebars_generator {
         handlebars.register_helper("md2html", Box::new(md2html));
         handlebars.register_helper("resolve", Box::new(resolve));
 
-        for path in WalkDir::new(project_root.as_ref().join("src"))
+        // enumerate template files
+        for path in WalkDir::new(get_templates_directory(project_root))
             .into_iter()
             .filter_map(|e| e.ok())
             .map(|e| e.path().to_path_buf())
