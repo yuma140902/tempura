@@ -15,11 +15,14 @@ use crate::project_config::ProjectConfig;
 pub mod cli;
 pub mod directory;
 pub mod generator;
+pub mod handlebars_helpers;
 mod loader;
 pub mod project_config;
+mod template_engine;
 mod value;
 
 pub use loader::*;
+pub use template_engine::*;
 pub use value::*;
 
 fn build_single_file(
