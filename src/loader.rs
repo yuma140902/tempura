@@ -2,8 +2,11 @@ use std::io::Read;
 
 use crate::value::Value;
 
-pub mod frontmatter_loader;
-pub mod static_resource_loader;
+mod frontmatter_loader;
+mod static_resource_loader;
+
+pub use frontmatter_loader::*;
+pub use static_resource_loader::*;
 
 /// [`Loader`] reads [`Value`] from a file. There are several Loaders depending on the type of file.
 /// For example, [`FrontmatterLoader`](self::frontmatter_loader::FrontmatterLoader) usually loads markdown files, while [`StaticResourceLoader`](self::static_resource_loader::StaticResourceLoader) loads static resources.
