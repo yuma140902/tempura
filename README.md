@@ -1,10 +1,10 @@
 # Tempura
 
-[![](https://badgen.net/github/checks/yuma140902/tempura/master/ubuntu?label=linux)](https://github.com/yuma140902/tempura/actions/workflows/ci.yml)
-[![](https://badgen.net/github/checks/yuma140902/tempura/master/windows?icon=windows)](https://github.com/yuma140902/tempura/actions/workflows/ci.yml)
-[![](https://badgen.net/github/checks/yuma140902/tempura/master/macos?icon=apple)](https://github.com/yuma140902/tempura/actions/workflows/ci.yml)
-[![](https://badgen.net/crates/v/tempura?color=blue)](https://crates.io/crates/tempura)
-[![](https://docs.rs/tempura/badge.svg)](https://docs.rs/tempura/)
+[![](https://img.shields.io/github/actions/workflow/status/yuma140902/tempura/ci.yml?logo=linux&logoColor=white&label=CI%20on%20Linux)](https://github.com/yuma140902/tempura/actions)
+[![](https://img.shields.io/github/actions/workflow/status/yuma140902/tempura/ci.yml?logo=windows&logoColor=white&label=CI%20on%20Windows)](https://github.com/yuma140902/tempura/actions)
+[![](https://img.shields.io/github/actions/workflow/status/yuma140902/tempura/ci.yml?logo=apple&logoColor=white&label=CI%20on%20macOS)](https://github.com/yuma140902/tempura/actions)
+[![](https://img.shields.io/crates/v/tempura?color=blue)](https://crates.io/crates/tempura)
+[![](https://img.shields.io/docsrs/tempura)](https://docs.rs/tempura/)
 
 Tempura is a Static Site Generator (SSG) written in Rust. It can generate HTML from Markdown documents and Handlebars templates. It can also handle static content including images and CSS files, and resolve paths accurately.
 
