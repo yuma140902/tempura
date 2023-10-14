@@ -3,6 +3,6 @@
 /// It is hierarchical and has types such as object, string, and numeric.
 
 pub enum Value {
-    RON(ron::Value),
+    Bytes(Vec<u8>),
     YAML(serde_yaml::Value),
 }
