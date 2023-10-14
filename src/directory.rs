@@ -8,6 +8,10 @@ pub fn get_pages_directory(project_root: impl AsRef<Path>) -> PathBuf {
     project_root.as_ref().join("src").join("pages")
 }
 
+pub fn get_templates_directory(project_root: impl AsRef<Path>) -> PathBuf {
+    project_root.as_ref().join("src").join("templates")
+}
+
 pub fn get_output_directory(project_root: impl AsRef<Path>) -> PathBuf {
     project_root.as_ref().join("public")
 }
