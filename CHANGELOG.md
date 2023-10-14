@@ -1,4 +1,20 @@
 
+<a name="v0.2.3"></a>
+## [v0.2.3](https://github.com/yuma140902/tempura/compare/v0.2.2...v0.2.3)
+
+> 2023-10-14
+
+### :memo: Documentation Changes
+
+* update CHANGELOG.md for v0.2.2 [skip ci]
+
+### Pull Requests
+
+* Merge pull request [#31](https://github.com/yuma140902/tempura/issues/31) from yuma140902/update-deps
+* Merge pull request [#30](https://github.com/yuma140902/tempura/issues/30) from yuma140902/add-license-files
+* Merge pull request [#29](https://github.com/yuma140902/tempura/issues/29) from yuma140902/release-v0.2.2
+
+
 <a name="v0.2.2"></a>
 ## [v0.2.2](https://github.com/yuma140902/tempura/compare/v0.2.1...v0.2.2)
 
