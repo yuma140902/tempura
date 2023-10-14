@@ -8,7 +8,7 @@
 ### {{ .Title }}
 
 {{ range .Commits -}}
-* {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }}
+* {{ if .Scope }}**{{ .Scope }}:** {{ end }}[`{{ .Hash.Short }}`](https://github.com/yuma140902/tempura/commit/{{ .Hash.Long }}) {{ .Subject }} (by {{ .Author.Name }} {{- if .CoAuthors }} with co-author(s){{ end }})
 {{ end }}
 {{ end -}}
 
