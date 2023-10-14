@@ -6,7 +6,7 @@ use anyhow::Context;
 use crate::loader::Loader;
 use crate::value::Value;
 
-pub struct MarkdownLoader;
+pub struct FrontmatterLoader;
 
 /// Decompose the input into front matter and content portions.
 fn decompose_frontmatter(text: &str) -> (Option<String>, Cow<'_, str>) {
@@ -17,7 +17,7 @@ fn decompose_frontmatter(text: &str) -> (Option<String>, Cow<'_, str>) {
     }
 }
 
-impl Loader for MarkdownLoader {
+impl Loader for FrontmatterLoader {
     fn load(mut reader: impl Read) -> anyhow::Result<Value> {
         let mut buf = String::new();
         reader
