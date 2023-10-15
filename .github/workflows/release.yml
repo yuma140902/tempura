@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*.*.*'
+    branches:
+      - master
 
 env:
   # Disable incremental build
@@ -87,60 +89,22 @@ jobs:
         name: ${{ env.PJ_NAME }}-${{ matrix.target }}.zip
         path: ${{ env.PJ_NAME }}-${{ matrix.target }}.zip
   
-  changelog:
-    name: Generate and commit changelog for ${{ github.ref_name }}
-    runs-on: ubuntu-latest
-    outputs:
-      changelog: ${{ steps.changelog.outputs.changes }}
-    steps:
-      - name: Setup | Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Setup | Go
-        uses: actions/setup-go@v3
-      
-      - name: Setup | Install git-chglog
-        run: go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
-      
-      - name: Generate changelog
-        run: |
-          /home/runner/go/bin/git-chglog ${{ github.ref_name }} | tee CHANGELOG-${{ github.ref_name }}.md
-          /home/runner/go/bin/git-chglog ..${{ github.ref_name }} | tee CHANGELOG.md
-      
-      - name: Commit CHANGELOG.md
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: master
-          commit_message: 'doc: update CHANGELOG.md for ${{ github.ref_name }} [skip ci]'
-          file_pattern: CHANGELOG.md
-          
-      - name: Upload CHANGELOG-${{ github.ref_name }}.md
-        uses: actions/upload-artifact@v3
-        with:
-          name: changelog
-          path: CHANGELOG-${{ github.ref_name }}.md
-          
-      - name: Upload CHANGELOG.md
-        uses: actions/upload-artifact@v3
-        with:
-          name: changelog-all
-          path: CHANGELOG.md
-
   github_release:
     name: Make a new GitHub release for ${{ github.ref_name }}
     needs: [build, changelog]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: pre-release.yml
+          workflow_conclusion: success
         
       - name: Add Artifacts to Release
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ env.PJ_NAME }}-*/${{ env.PJ_NAME }}-*
-          body_path: changelog/CHANGELOG-${{ github.ref_name }}.md
+          body_path: release-note/RELEASE_NOTE.md
           tag_name: ${{ github.ref_name }}
 
   crates_io_publish:
