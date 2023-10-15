@@ -67,12 +67,7 @@ fn build_single_file(
 pub fn build(project_root: &Path) -> io::Result<()> {
     let pages_directory = directory::get_pages_directory(project_root);
     let project_config_path = directory::get_project_config_path(project_root);
-    let config = {
-        let mut config: ProjectConfig =
-            serde_json::from_str(&fs::read_to_string(project_config_path)?)?;
-        config.generate_regex();
-        config
-    };
+    let config: ProjectConfig = serde_json::from_str(&fs::read_to_string(project_config_path)?)?;
 
     let generators = generator::get_generators(project_root);
 
@@ -84,12 +79,7 @@ pub fn build(project_root: &Path) -> io::Result<()> {
     {
         let mut selected_rule = None;
         for rule in config.generator.rules.iter() {
-            if rule
-                .match_regex
-                .get()
-                .unwrap()
-                .is_match(filepath.to_string_lossy().borrow())
-            {
+            if rule.match_.is_match(filepath.to_string_lossy().borrow()) {
                 selected_rule = Some(rule);
             }
         }
