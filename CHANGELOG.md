@@ -1,4 +1,25 @@
 
+<a name="v0.3.2"></a>
+## [v0.3.2](https://github.com/yuma140902/tempura/compare/v0.3.1...v0.3.2)
+
+> 2023-10-15
+
+### :construction_worker: Build System
+
+* [`fed4026`](https://github.com/yuma140902/tempura/commit/fed4026a36f6fb577ade4f10083800b37eb63ec8) download artifacts (by yuma14)
+* [`1415b5c`](https://github.com/yuma140902/tempura/commit/1415b5cebc2c9191073089cc845236cebd8aea37) commit changelog to release branch (by yuma14)
+
+### :memo: Documentation Changes
+
+* [`fb217e7`](https://github.com/yuma140902/tempura/commit/fb217e71ab4d561cde19fce820bbb90784edec3e) how to download binary (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#55](https://github.com/yuma140902/tempura/issues/55) from yuma140902/yuma140902-patch-1
+* Merge pull request [#54](https://github.com/yuma140902/tempura/issues/54) from yuma140902/fix-ci-download-artifacts
+* Merge pull request [#53](https://github.com/yuma140902/tempura/issues/53) from yuma140902/fix-ci
+
+
 <a name="v0.3.1"></a>
 ## [v0.3.1](https://github.com/yuma140902/tempura/compare/v0.3.0...v0.3.1)
 
@@ -11,6 +32,7 @@
 
 ### :memo: Documentation Changes
 
+* [`c405017`](https://github.com/yuma140902/tempura/commit/c405017e4dd51f51cab09d2b97c75c8b7a8e7be3) update CHANGELOG.md for v0.3.1 [skip ci] (by yuma140902)
 * [`1c0852d`](https://github.com/yuma140902/tempura/commit/1c0852df6eb2091636dd294b1fd7316dd54b45b3) update CHANGELOG.md for v0.3.1 [skip ci] (by yuma140902)
 * [`5a4dae6`](https://github.com/yuma140902/tempura/commit/5a4dae6f6cf325814244cef9a67f3a76842f356b) update CHANGELOG.md for v0.3.1 [skip ci] (by yuma140902)
 * [`c1e4b1f`](https://github.com/yuma140902/tempura/commit/c1e4b1fe5bb105ed0a2a71ef8cd3c5f0a9bd069a) update CHANGELOG.md for v0.3.1 [skip ci] (by yuma140902)
@@ -22,6 +44,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#52](https://github.com/yuma140902/tempura/issues/52) from yuma140902/release/v0.3.1
 * Merge pull request [#51](https://github.com/yuma140902/tempura/issues/51) from yuma140902/release/v0.3.1
 * Merge pull request [#50](https://github.com/yuma140902/tempura/issues/50) from yuma140902/release/v0.3.1
 * Merge pull request [#49](https://github.com/yuma140902/tempura/issues/49) from yuma140902/change-tag
