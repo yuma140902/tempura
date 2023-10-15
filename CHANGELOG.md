@@ -6,7 +6,12 @@
 
 ### :construction_worker: Build System
 
+* [`c19cc62`](https://github.com/yuma140902/tempura/commit/c19cc629b992b43278d7f346667ee2a3933985d1) change tag commit (by yuma14)
 * [`2b0382c`](https://github.com/yuma140902/tempura/commit/2b0382c0d5854fa754d69d2022b237a445ac4458) release when release pull request was merged (by yuma14)
+
+### :memo: Documentation Changes
+
+* [`c1e4b1f`](https://github.com/yuma140902/tempura/commit/c1e4b1fe5bb105ed0a2a71ef8cd3c5f0a9bd069a) update CHANGELOG.md for v0.3.1 [skip ci] (by yuma140902)
 
 ### :bug: Bug Fixes
 
@@ -15,6 +20,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#49](https://github.com/yuma140902/tempura/issues/49) from yuma140902/change-tag
 * Merge pull request [#47](https://github.com/yuma140902/tempura/issues/47) from yuma140902/fix-ci
 * Merge pull request [#46](https://github.com/yuma140902/tempura/issues/46) from yuma140902/fix-ci
 * Merge pull request [#45](https://github.com/yuma140902/tempura/issues/45) from yuma140902/release/v0.3.0
