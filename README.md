@@ -16,11 +16,24 @@ Tempura is a Static Site Generator (SSG) written in Rust. It can generate HTML f
 cargo install tempura
 ```
 
-### Install binary
+### Download binary
 
-You can download a binary from [releases page](https://github.com/yuma140902/tempura/releases).
+You can download a binary archive from [releases page](https://github.com/yuma140902/tempura/releases).
 
-Or you can download with [cargo-binstall](https://github.com/cargo-bins/cargo-binstall).
+```sh
+# run one of the following to download binary archive
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-aarch64-apple-darwin.tar.gz
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-aarch64-unknown-linux-gnu.tar.gz
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-aarch64-unknown-linux-musl.tar.gz
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-i686-pc-windows-msvc.zip
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-i686-unknown-linux-gnu.tar.gz
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-i686-unknown-linux-musl.tar.gz
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-x86_64-apple-darwin.tar.gz
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-x86_64-pc-windows-msvc.zip
+wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-x86_64-unknown-linux-musl.tar.gz 
+```
+
+Or you can download and install with [cargo-binstall](https://github.com/cargo-bins/cargo-binstall).
 
 ```sh
 cargo binstall tempura
