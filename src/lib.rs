@@ -136,5 +136,12 @@ pub fn init(project_root: &Path) -> io::Result<()> {
 
     info!("setup done.");
 
+    println!();
+    println!("Setup done. To build website, run:");
+    println!();
+    println!("  cd {}", project_root.display());
+    println!("  tempura build .");
+    println!();
+
     Ok(())
 }
