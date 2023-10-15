@@ -11,6 +11,7 @@
 
 ### :memo: Documentation Changes
 
+* [`5a4dae6`](https://github.com/yuma140902/tempura/commit/5a4dae6f6cf325814244cef9a67f3a76842f356b) update CHANGELOG.md for v0.3.1 [skip ci] (by yuma140902)
 * [`c1e4b1f`](https://github.com/yuma140902/tempura/commit/c1e4b1fe5bb105ed0a2a71ef8cd3c5f0a9bd069a) update CHANGELOG.md for v0.3.1 [skip ci] (by yuma140902)
 
 ### :bug: Bug Fixes
@@ -20,6 +21,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#50](https://github.com/yuma140902/tempura/issues/50) from yuma140902/release/v0.3.1
 * Merge pull request [#49](https://github.com/yuma140902/tempura/issues/49) from yuma140902/change-tag
 * Merge pull request [#47](https://github.com/yuma140902/tempura/issues/47) from yuma140902/fix-ci
 * Merge pull request [#46](https://github.com/yuma140902/tempura/issues/46) from yuma140902/fix-ci
