@@ -108,11 +108,14 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     steps:
-      - name: Download artifacts
+      - name: Download release note
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: pre-release.yml
           workflow_conclusion: success
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
         
       - name: Add Artifacts to Release
         uses: softprops/action-gh-release@v1
