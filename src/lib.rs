@@ -130,6 +130,10 @@ pub fn init(project_root: &Path) -> io::Result<()> {
     fs::write(&config_file, config_json)?;
     info!("setup project config file: {}", config_file.display());
 
+    let gitignore = project_root.join(".gitignore");
+    fs::write(&gitignore, include_str!("../resources/gitignore"))?;
+    info!("setup .gitignore file: {}", gitignore.display());
+
     info!("setup done.");
 
     Ok(())
