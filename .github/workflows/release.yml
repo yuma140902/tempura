@@ -91,7 +91,7 @@ jobs:
   
   github_release:
     name: Make a new GitHub release for ${{ github.ref_name }}
-    needs: [build, changelog]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -109,7 +109,7 @@ jobs:
 
   crates_io_publish:
     name: Publish ${{ github.ref_name }} to Crates.io
-    needs: [build, changelog]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Setup | Checkout
