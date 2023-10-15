@@ -45,7 +45,6 @@ jobs:
           branch: master
           commit_message: 'doc: update CHANGELOG.md for ${{ env.Version }} [skip ci]'
           file_pattern: CHANGELOG.md
-          tagging_message: ${{ env.Version }}
 
       - name: Post comments
         env:
