@@ -2,7 +2,7 @@ name: Release to GitHub and Crates.io
 
 on:
   pull_request:
-    type:
+    types:
       - closed
 
 env:

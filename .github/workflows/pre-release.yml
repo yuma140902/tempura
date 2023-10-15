@@ -2,7 +2,7 @@ name: Generate changelog before release.yml
 
 on:
   pull_request:
-    type: 
+    types: 
       - opened
 
 env:
