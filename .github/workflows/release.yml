@@ -23,7 +23,7 @@ jobs:
           ref=${{ github.head_ref }}
           version=${ref#release/}
           echo $version
-          echo "version=$tag" >> $GITHUB_OUTPUT
+          echo "version=$version" >> $GITHUB_OUTPUT
 
   build:
     name: Build for ${{ matrix.target }} on ${{ matrix.os }}
