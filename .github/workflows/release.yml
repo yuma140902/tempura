@@ -1,11 +1,9 @@
 name: Release to GitHub and Crates.io
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
-    branches:
-      - master
+  pull_request:
+    type:
+      - closed
 
 env:
   # Disable incremental build
@@ -16,18 +14,21 @@ jobs:
   version:
     name: Get version from git tag
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     outputs:
-      version: ${{ steps.s.outputs.tag }}
+      version: ${{ steps.s.outputs.version }}
     steps:
       - id: s
         run: |
-          tag=${GITHUB_REF#refs/*/}
-          echo $tag
-          echo "tag=$tag" >> $GITHUB_OUTPUT
+          ref=${{ github.head_ref }}
+          version=${ref#release/}
+          echo $version
+          echo "version=$tag" >> $GITHUB_OUTPUT
 
   build:
     name: Build for ${{ matrix.target }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     strategy:
       fail-fast: false
       matrix:
@@ -105,6 +106,7 @@ jobs:
     name: Make a new GitHub release for ${{ needs.version.outputs.version }}
     needs: [build, version]
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     steps:
       - name: Download artifacts
         uses: dawidd6/action-download-artifact@v2
@@ -123,6 +125,7 @@ jobs:
     name: Publish ${{ needs.version.outputs.version }} to Crates.io
     needs: [build]
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     steps:
       - name: Setup | Checkout
         uses: actions/checkout@v3
