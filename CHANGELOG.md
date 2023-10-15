@@ -11,10 +11,16 @@
 
 ### :memo: Documentation Changes
 
+* [`c905658`](https://github.com/yuma140902/tempura/commit/c905658fa1ee66e91060ec509c2cda7604e081a1) update CHANGELOG.md for v0.3.2 [skip ci] (by yuma140902)
 * [`fb217e7`](https://github.com/yuma140902/tempura/commit/fb217e71ab4d561cde19fce820bbb90784edec3e) how to download binary (by yuma14)
+
+### Reverts
+
+* ci: commit changelog to release branch
 
 ### Pull Requests
 
+* Merge pull request [#56](https://github.com/yuma140902/tempura/issues/56) from yuma140902/release/v0.3.2
 * Merge pull request [#55](https://github.com/yuma140902/tempura/issues/55) from yuma140902/yuma140902-patch-1
 * Merge pull request [#54](https://github.com/yuma140902/tempura/issues/54) from yuma140902/fix-ci-download-artifacts
 * Merge pull request [#53](https://github.com/yuma140902/tempura/issues/53) from yuma140902/fix-ci
