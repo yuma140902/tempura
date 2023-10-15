@@ -35,7 +35,7 @@ jobs:
       
       - name: Generate changelog
         run: |
-          /home/runner/go/bin/git-chglog --next-tag ${{ env.Version }} | tee RELEASE_NOTE.md
+          /home/runner/go/bin/git-chglog --next-tag ${{ env.Version }} ${{ env.Version }}| tee RELEASE_NOTE.md
           /home/runner/go/bin/git-chglog --next-tag ${{ env.Version }} ..${{ env.Version }} | tee CHANGELOG.md
       
       - name: Commit CHANGELOG.md

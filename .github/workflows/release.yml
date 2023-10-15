@@ -13,6 +13,18 @@ env:
   PJ_NAME: tempura
 
 jobs:
+  version:
+    name: Get version from git tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.s.outputs.tag }}
+    steps:
+      - id: s
+        run: |
+          tag=${GITHUB_REF#refs/*/}
+          echo $tag
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
   build:
     name: Build for ${{ matrix.target }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -90,8 +102,8 @@ jobs:
         path: ${{ env.PJ_NAME }}-${{ matrix.target }}.zip
   
   github_release:
-    name: Make a new GitHub release for ${{ github.ref_name }}
-    needs: [build]
+    name: Make a new GitHub release for ${{ needs.version.outputs.version }}
+    needs: [build, version]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -105,10 +117,10 @@ jobs:
         with:
           files: ${{ env.PJ_NAME }}-*/${{ env.PJ_NAME }}-*
           body_path: release-note/RELEASE_NOTE.md
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ needs.version.outputs.version }}
 
   crates_io_publish:
-    name: Publish ${{ github.ref_name }} to Crates.io
+    name: Publish ${{ needs.version.outputs.version }} to Crates.io
     needs: [build]
     runs-on: ubuntu-latest
     steps:
