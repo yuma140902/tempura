@@ -14,7 +14,7 @@ jobs:
   version:
     name: Get version from git tag
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     outputs:
       version: ${{ steps.s.outputs.version }}
     steps:
@@ -28,7 +28,7 @@ jobs:
   build:
     name: Build for ${{ matrix.target }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    if: github.event.pull_request.merged
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     strategy:
       fail-fast: false
       matrix:
@@ -106,7 +106,7 @@ jobs:
     name: Make a new GitHub release for ${{ needs.version.outputs.version }}
     needs: [build, version]
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     steps:
       - name: Download artifacts
         uses: dawidd6/action-download-artifact@v2
@@ -125,7 +125,7 @@ jobs:
     name: Publish ${{ needs.version.outputs.version }} to Crates.io
     needs: [build]
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged
+    if: ${{ startsWith(github.head_ref, 'release/') && github.event.pull_request.merged }}
     steps:
       - name: Setup | Checkout
         uses: actions/checkout@v3
