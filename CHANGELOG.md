@@ -1,4 +1,18 @@
 
+<a name="v0.3.3"></a>
+## [v0.3.3](https://github.com/yuma140902/tempura/compare/v0.3.2...v0.3.3)
+
+> 2023-10-15
+
+### :wrench: Chores
+
+* [`a0ab7c6`](https://github.com/yuma140902/tempura/commit/a0ab7c672b81640806f1f897cf06716f5fcd95d5) update deps (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#64](https://github.com/yuma140902/tempura/issues/64) from yuma140902/update-deps
+
+
 <a name="v0.3.2"></a>
 ## [v0.3.2](https://github.com/yuma140902/tempura/compare/v0.3.1...v0.3.2)
 
@@ -13,6 +27,7 @@
 
 ### :memo: Documentation Changes
 
+* [`4190cca`](https://github.com/yuma140902/tempura/commit/4190cca102a647711a3fa1865afe48e71045b37c) update CHANGELOG.md for v0.3.2 [skip ci] (by yuma140902)
 * [`4d8f281`](https://github.com/yuma140902/tempura/commit/4d8f281b25ea7b63dbd08784bfbfa78b1077ee7a) update CHANGELOG.md for v0.3.2 [skip ci] (by yuma140902)
 * [`c905658`](https://github.com/yuma140902/tempura/commit/c905658fa1ee66e91060ec509c2cda7604e081a1) update CHANGELOG.md for v0.3.2 [skip ci] (by yuma140902)
 * [`fb217e7`](https://github.com/yuma140902/tempura/commit/fb217e71ab4d561cde19fce820bbb90784edec3e) how to download binary (by yuma14)
@@ -26,6 +41,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#63](https://github.com/yuma140902/tempura/issues/63) from yuma140902/release/v0.3.2
 * Merge pull request [#62](https://github.com/yuma140902/tempura/issues/62) from yuma140902/revert-ci-fix
 * Merge pull request [#59](https://github.com/yuma140902/tempura/issues/59) from yuma140902/fix-ci-2
 * Merge pull request [#56](https://github.com/yuma140902/tempura/issues/56) from yuma140902/release/v0.3.2
