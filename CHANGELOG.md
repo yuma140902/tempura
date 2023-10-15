@@ -1,4 +1,25 @@
 
+<a name="v0.3.1"></a>
+## [v0.3.1](https://github.com/yuma140902/tempura/compare/v0.3.0...v0.3.1)
+
+> 2023-10-15
+
+### :construction_worker: Build System
+
+* [`2b0382c`](https://github.com/yuma140902/tempura/commit/2b0382c0d5854fa754d69d2022b237a445ac4458) release when release pull request was merged (by yuma14)
+
+### :bug: Bug Fixes
+
+* [`94afcfc`](https://github.com/yuma140902/tempura/commit/94afcfca2ba907d01f10f6fe6d4ebfb6ea53f894) release workflow (by yuma14)
+* [`21b0910`](https://github.com/yuma140902/tempura/commit/21b0910e2a79cbf117ba01c4540f5f7c28197332) pre-release workflow (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#47](https://github.com/yuma140902/tempura/issues/47) from yuma140902/fix-ci
+* Merge pull request [#46](https://github.com/yuma140902/tempura/issues/46) from yuma140902/fix-ci
+* Merge pull request [#45](https://github.com/yuma140902/tempura/issues/45) from yuma140902/release/v0.3.0
+
+
 <a name="v0.3.0"></a>
 ## [v0.3.0](https://github.com/yuma140902/tempura/compare/v0.2.3...v0.3.0)
 
@@ -12,6 +33,7 @@
 
 ### :memo: Documentation Changes
 
+* [`64fbca6`](https://github.com/yuma140902/tempura/commit/64fbca6a654b306fdf5329657662cc2c0b164677) update CHANGELOG.md for v0.3.0 [skip ci] (by yuma140902)
 * [`9dd512d`](https://github.com/yuma140902/tempura/commit/9dd512df47e226ee039cf5a8ffe7116db207c077) update CHANGELOG.md for v0.3.0 [skip ci] (by yuma140902)
 * [`166efc7`](https://github.com/yuma140902/tempura/commit/166efc726b4654b29bddfbd53470afbd1da2ea09) update CHANGELOG.md for v0.2.3 [skip ci] (by yuma140902)
 
