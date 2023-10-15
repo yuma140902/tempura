@@ -25,6 +25,7 @@ jobs:
         run: |
           ref=${{ github.head_ref }}
           version=${ref#release/}
+          echo $version
           echo "Version=$version" >> $GITHUB_ENV
       
       - name: Setup | Go
