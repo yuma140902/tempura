@@ -1,0 +1,66 @@
+name: Generate changelog before release.yml
+
+on:
+  pull_request:
+    type: 
+      - opened
+
+env:
+  PJ_NAME: tempura
+
+jobs:
+  changelog:
+    name: Generate and commit changelog for ${{ github.head_ref }}
+    runs-on: ubuntu-latest
+    if:  startsWith(github.head_ref, 'release/')
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changes }}
+    steps:
+      - name: Setup | Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Parse version
+        run: |
+          ref=${{ github.head_ref }}
+          version=${ref#release/}
+          echo "Version=$version" >> $GITHUB_ENV
+      
+      - name: Setup | Go
+        uses: actions/setup-go@v3
+      
+      - name: Setup | Install git-chglog
+        run: go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
+      
+      - name: Generate changelog
+        run: |
+          /home/runner/go/bin/git-chglog ${{ env.Version }} | tee RELEASE_NOTE.md
+          /home/runner/go/bin/git-chglog ..${{ env.Version }} | tee CHANGELOG.md
+      
+      - name: Commit CHANGELOG.md
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: master
+          commit_message: 'doc: update CHANGELOG.md for ${{ env.Version }} [skip ci]'
+          file_pattern: CHANGELOG.md
+          tagging_message: ${{ env.Version }}
+
+      - name: Post comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.html_url }}
+        run:
+          gh pr comment -F RELEASE_NOTE.md "${URL}"
+          
+      - name: Upload CHANGELOG-${{ env.Version }}.md
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-note
+          path: RELEASE_NOTE.md
+          
+      - name: Upload CHANGELOG.md
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelog-all
+          path: CHANGELOG.md
