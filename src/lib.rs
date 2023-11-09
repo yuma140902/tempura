@@ -1,8 +1,10 @@
-use std::{fs, io, path::Path};
+use std::{borrow::Borrow, fs, io, path::Path};
 
 use anyhow::Context;
+use tracing::error;
+use walkdir::WalkDir;
 
-use crate::project_config::ProjectConfig;
+use crate::{pipeline::Job, project_config::ProjectConfig};
 
 pub mod cli;
 pub mod directory;
@@ -31,7 +33,43 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
         )
     })?;
 
-    dbg!(config);
+    dbg!(&config);
+
+    let pages_directory = directory::get_pages_directory(project_root);
+
+    let mut jobs = vec![];
+
+    for filepath in WalkDir::new(&pages_directory)
+        .into_iter()
+        .filter_map(|entry| entry.ok())
+        .map(|entry| entry.path().to_path_buf())
+        .filter(|path| path.is_file())
+    {
+        // TODO: filepathはpages_directoryからの相対パスのはずだが確証がないので調べる
+        let relative_filepath = filepath;
+        let mut selected_pipeline = None;
+        for pipeline in config.pipelines.iter() {
+            if pipeline.accepts(&relative_filepath) {
+                selected_pipeline = Some(pipeline);
+                break;
+            }
+        }
+
+        match selected_pipeline {
+            None => {
+                error!("File {}: No pipeline found", relative_filepath.display());
+                continue;
+            }
+            Some(pipeline) => jobs.push(pipeline.to_job(&relative_filepath, &project_root)),
+        }
+    }
+
+    // TODO: 各パイプラインごとに(各Jobごとではない)必要なリソースを事前読込する
+    // see: Pipeline::get_needed_resources
+
+    for job in jobs {
+        job.execute()?;
+    }
 
     Ok(())
 }
