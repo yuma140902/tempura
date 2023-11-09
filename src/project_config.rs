@@ -21,9 +21,8 @@ impl Default for ProjectConfig {
                     steps: vec![
                         Step::Load {
                             path: "src/templates/default.html.hbs".into(),
-                            loader: EnumLoader::Template {
-                                template_name: "default".to_string(),
-                            },
+                            name: "default_template".to_string(),
+                            loader: EnumLoader::Template,
                         },
                         Step::Transform {
                             transformer: EnumTransformer::TemplateRenderer {

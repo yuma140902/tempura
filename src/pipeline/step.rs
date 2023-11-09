@@ -5,15 +5,21 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub enum Step {
-    Load { path: PathBuf, loader: EnumLoader },
-    Transform { transformer: EnumTransformer },
+    Load {
+        path: PathBuf,
+        name: String,
+        loader: EnumLoader,
+    },
+    Transform {
+        transformer: EnumTransformer,
+    },
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 #[serde(tag = "type")]
 pub enum EnumLoader {
-    Template { template_name: String },
-    Json { store_as: String },
+    Template,
+    Json,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
