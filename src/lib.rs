@@ -1,22 +1,14 @@
-use std::{
-    borrow::{Borrow, Cow},
-    collections::HashMap,
-    fs, io,
-    path::{Path, PathBuf},
-};
+use std::{fs, io, path::Path};
 
-use generator::Generator;
-use project_config::GeneratorRule;
-use tracing::{error, info};
-use walkdir::WalkDir;
+use tracing::info;
 
 use crate::project_config::ProjectConfig;
 
 pub mod cli;
 pub mod directory;
-pub mod generator;
 pub mod handlebars_helpers;
 mod loader;
+pub mod pipeline;
 pub mod project_config;
 mod template_engine;
 mod value;
@@ -25,71 +17,13 @@ pub use loader::*;
 pub use template_engine::*;
 pub use value::*;
 
-fn build_single_file(
-    filepath: PathBuf,
-    project_root: &Path,
-    rule: Option<&GeneratorRule>,
-    generators: &HashMap<String, Box<dyn Generator>>,
-) -> io::Result<()> {
-    let rule = if let Some(rule) = rule {
-        Cow::Borrowed(rule)
-    } else {
-        Cow::Owned(GeneratorRule::default())
-    };
-
-    let pages_directory = directory::get_pages_directory(project_root);
-    let mut output_directory = directory::get_output_directory(project_root);
-    if let Some(ref export_base) = rule.export_base {
-        output_directory = output_directory.join(export_base);
-    }
-
-    let mut output_filepath =
-        output_directory.join(directory::get_relative_path(&filepath, pages_directory));
-    if let Some(ref export_extension) = rule.export_extension {
-        output_filepath.set_extension(export_extension);
-    }
-    info!(
-        "generating {} from {} with generator '{}'",
-        output_filepath.display(),
-        filepath.display(),
-        rule.generator,
-    );
-
-    let generator = generators.get(&rule.generator).unwrap();
-    generator
-        .generate(&filepath, &output_filepath, project_root.as_ref(), &rule)
-        .unwrap();
-
-    Ok(())
-}
-
 #[tracing::instrument]
 pub fn build(project_root: &Path) -> io::Result<()> {
-    let pages_directory = directory::get_pages_directory(project_root);
     let project_config_path = directory::get_project_config_path(project_root);
     let config: ProjectConfig = serde_json::from_str(&fs::read_to_string(project_config_path)?)?;
 
-    let generators = generator::get_generators(project_root);
+    dbg!(config);
 
-    for filepath in WalkDir::new(&pages_directory)
-        .into_iter()
-        .filter_map(|e| e.ok())
-        .map(|e| e.path().to_path_buf())
-        .filter(|p| p.is_file())
-    {
-        let mut selected_rule = None;
-        for rule in config.generator.rules.iter() {
-            if rule.match_.is_match(filepath.to_string_lossy().borrow()) {
-                selected_rule = Some(rule);
-            }
-        }
-
-        let result = build_single_file(filepath, project_root, selected_rule, &generators);
-        if let Err(err) = result {
-            error!("error: {:?}", err);
-        }
-    }
-    info!("Done.");
     Ok(())
 }
 
