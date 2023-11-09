@@ -1,10 +1,10 @@
-use std::{borrow::Borrow, fs, io, path::Path};
+use std::{fs, io, path::Path};
 
 use anyhow::Context;
 use tracing::error;
 use walkdir::WalkDir;
 
-use crate::{pipeline::Job, project_config::ProjectConfig};
+use crate::project_config::ProjectConfig;
 
 pub mod cli;
 pub mod directory;
