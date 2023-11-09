@@ -15,14 +15,6 @@ impl Default for ProjectConfig {
             pipelines: vec![
                 Pipeline {
                     entry: Entry {
-                        match_regex: Regex::new(".*").unwrap(),
-                        type_: EntryType::Blob,
-                    },
-                    steps: vec![],
-                    output_extension: None,
-                },
-                Pipeline {
-                    entry: Entry {
                         match_regex: Regex::new(".*[.]md").unwrap(),
                         type_: EntryType::TextWithFrontmatter,
                     },
@@ -40,6 +32,14 @@ impl Default for ProjectConfig {
                         },
                     ],
                     output_extension: Some("html".to_string()),
+                },
+                Pipeline {
+                    entry: Entry {
+                        match_regex: Regex::new(".*").unwrap(),
+                        type_: EntryType::Blob,
+                    },
+                    steps: vec![],
+                    output_extension: None,
                 },
             ],
             output_base_directory: "public".to_string(),
