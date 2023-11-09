@@ -1,5 +1,6 @@
 use std::{fs, io, path::Path};
 
+use anyhow::Context;
 use tracing::info;
 
 use crate::project_config::ProjectConfig;
@@ -18,9 +19,18 @@ pub use template_engine::*;
 pub use value::*;
 
 #[tracing::instrument]
-pub fn build(project_root: &Path) -> io::Result<()> {
+pub fn build(project_root: &Path) -> anyhow::Result<()> {
     let project_config_path = directory::get_project_config_path(project_root);
-    let config: ProjectConfig = serde_json::from_str(&fs::read_to_string(project_config_path)?)?;
+    let config: ProjectConfig = serde_yaml::from_str(
+        &fs::read_to_string(&project_config_path)
+            .with_context(|| format!("could not load file {}", project_config_path.display()))?,
+    )
+    .with_context(|| {
+        format!(
+            "failed to parse project config {}",
+            project_config_path.display()
+        )
+    })?;
 
     dbg!(config);
 

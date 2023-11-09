@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 pub fn get_project_config_path(project_root: impl AsRef<Path>) -> PathBuf {
-    project_root.as_ref().join("tempura.json")
+    project_root.as_ref().join("tempura.yml")
 }
 
 pub fn get_pages_directory(project_root: impl AsRef<Path>) -> PathBuf {
