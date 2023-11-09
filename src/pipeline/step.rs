@@ -11,6 +11,8 @@ pub enum Step {
         loader: EnumLoader,
     },
     Transform {
+        input: String,
+        output: String,
         transformer: EnumTransformer,
     },
 }

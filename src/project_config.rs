@@ -25,6 +25,8 @@ impl Default for ProjectConfig {
                             loader: EnumLoader::Template,
                         },
                         Step::Transform {
+                            input: "entry".to_string(),
+                            output: "entry".to_string(),
                             transformer: EnumTransformer::TemplateRenderer {
                                 template_name: "default".to_string(),
                             },
