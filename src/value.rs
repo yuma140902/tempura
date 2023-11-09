@@ -4,5 +4,5 @@
 
 pub enum Value {
     Bytes(Vec<u8>),
-    YAML(serde_yaml::Value),
+    JSON(serde_json::Value),
 }
