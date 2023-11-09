@@ -22,12 +22,12 @@ impl Default for ProjectConfig {
                         Step::Load {
                             path: "src/templates/default.html.hbs".into(),
                             name: "default_template".to_string(),
-                            loader: EnumLoader::Template,
+                            with: EnumLoader::Template,
                         },
                         Step::Transform {
                             input: "entry".to_string(),
                             output: "entry".to_string(),
-                            transformer: EnumTransformer::TemplateRenderer {
+                            with: EnumTransformer::TemplateRenderer {
                                 template_name: "default".to_string(),
                             },
                         },

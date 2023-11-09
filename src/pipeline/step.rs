@@ -8,24 +8,24 @@ pub enum Step {
     Load {
         path: PathBuf,
         name: String,
-        loader: EnumLoader,
+        with: EnumLoader,
     },
     Transform {
         input: String,
         output: String,
-        transformer: EnumTransformer,
+        with: EnumTransformer,
     },
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-#[serde(tag = "type")]
+#[serde(tag = "loader")]
 pub enum EnumLoader {
     Template,
     Json,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-#[serde(tag = "type")]
+#[serde(tag = "transformer")]
 pub enum EnumTransformer {
     TemplateRenderer { template_name: String },
 }
