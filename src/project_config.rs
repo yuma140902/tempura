@@ -1,7 +1,7 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::pipeline::{Entry, EntryType, LoaderType, Pipeline, Step, TransformerType};
+use crate::pipeline::{Entry, EntryType, EnumLoader, EnumTransformer, Pipeline, Step};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ProjectConfig {
@@ -29,10 +29,14 @@ impl Default for ProjectConfig {
                     steps: vec![
                         Step::Load {
                             path: "src/templates/default.html.hbs".into(),
-                            loader: LoaderType::Template,
+                            loader: EnumLoader::Template {
+                                template_name: "default".to_string(),
+                            },
                         },
                         Step::Transform {
-                            transformer: TransformerType::TemplateRenderer,
+                            transformer: EnumTransformer::TemplateRenderer {
+                                template_name: "default".to_string(),
+                            },
                         },
                     ],
                     output_extension: Some("html".to_string()),
