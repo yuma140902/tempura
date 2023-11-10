@@ -14,6 +14,7 @@ impl Default for ProjectConfig {
         Self {
             pipelines: vec![
                 Pipeline {
+                    name: "markdown to html".to_string(),
                     entry: Entry {
                         match_regex: Regex::new(".*[.]md").unwrap(),
                         type_: EntryType::TextWithFrontmatter,
@@ -35,6 +36,7 @@ impl Default for ProjectConfig {
                     output_extension: Some("html".to_string()),
                 },
                 Pipeline {
+                    name: "static resources".to_string(),
                     entry: Entry {
                         match_regex: Regex::new(".*").unwrap(),
                         type_: EntryType::Blob,

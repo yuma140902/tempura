@@ -1,4 +1,6 @@
 mod entry;
+mod job;
+mod resource;
 mod step;
 
 use std::path::{Path, PathBuf};
@@ -6,12 +8,15 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 
 pub use entry::*;
+pub use job::*;
+pub use resource::*;
 pub use step::*;
 
 use crate::directory;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Pipeline {
+    pub name: String,
     pub entry: Entry,
     pub steps: Vec<Step>,
     // TODO: もっと柔軟に出力パスを指定できるようにする
@@ -25,7 +30,12 @@ impl Pipeline {
             .is_match(path.as_ref().to_string_lossy().as_ref())
     }
 
-    pub fn get_needed_resources(&self) -> Vec<PathBuf> {
+    #[tracing::instrument(skip(self, project_root), fields(pipeline_name = self.name, project_root = project_root.as_ref().to_str()))]
+    pub fn prefetch_resources(&self, project_root: impl AsRef<Path>) -> anyhow::Result<Resource> {
+        Resource::load_for(self, project_root)
+    }
+
+    fn get_needed_paths(&self) -> Vec<PathBuf> {
         let mut paths = Vec::new();
         for step in &self.steps {
             match step {
@@ -40,15 +50,17 @@ impl Pipeline {
         &self,
         input_path: impl AsRef<Path>,
         output_path: impl AsRef<Path>,
+        resource: &Resource,
     ) -> anyhow::Result<()> {
         let input_path = input_path.as_ref();
         let output_path = output_path.as_ref();
         println!(
-            "{} -> {} (pipeline: {:?})",
+            "{} -> {} (pipeline: {})",
             input_path.display(),
             output_path.display(),
-            self
+            self.name
         );
+        println!("resource: {:?}", resource);
         // TODO: パイプラインの中身を実装
         Ok(())
     }
@@ -74,17 +86,5 @@ impl Pipeline {
             output_path: self.get_output_path(&input_path, &project_root),
             pipeline: &self,
         }
-    }
-}
-
-pub struct Job<'a> {
-    input_path: PathBuf,
-    output_path: PathBuf,
-    pipeline: &'a Pipeline,
-}
-
-impl<'a> Job<'a> {
-    pub fn execute(&self) -> anyhow::Result<()> {
-        self.pipeline.execute(&self.input_path, &self.output_path)
     }
 }

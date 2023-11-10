@@ -1,4 +1,4 @@
-use std::{fs, io, path::Path};
+use std::{collections::HashMap, fs, io, path::Path};
 
 use anyhow::Context;
 use tracing::error;
@@ -12,6 +12,7 @@ pub mod handlebars_helpers;
 mod loader;
 pub mod pipeline;
 pub mod project_config;
+pub mod store;
 mod template_engine;
 mod value;
 
@@ -64,11 +65,34 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
         }
     }
 
-    // TODO: 各パイプラインごとに(各Jobごとではない)必要なリソースを事前読込する
-    // see: Pipeline::get_needed_resources
+    let mut resources = HashMap::new();
+    // 各パイプラインごとに(各Jobごとではない)必要なリソースを事前読込する
+    for pipeline in config.pipelines.iter() {
+        resources.insert(
+            &pipeline.name,
+            pipeline
+                .prefetch_resources(&project_root)
+                .with_context(|| {
+                    format!(
+                        "failed to prefetch files for pipeline \"{}\"",
+                        pipeline.name
+                    )
+                })?,
+        );
+    }
 
     for job in jobs {
-        job.execute()?;
+        job.execute(resources.get(&&job.pipeline().name).expect(&format!(
+            "could not find prefetched resource for pipeline \"{}\"",
+            job.pipeline().name
+        )))
+        .with_context(|| {
+            format!(
+                "failed to complete job for pipeline \"{}\" and entry file \"{}\"",
+                job.pipeline().name,
+                job.input_path().display()
+            )
+        })?;
     }
 
     Ok(())

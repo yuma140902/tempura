@@ -4,10 +4,12 @@ pub fn get_project_config_path(project_root: impl AsRef<Path>) -> PathBuf {
     project_root.as_ref().join("tempura.yml")
 }
 
+// TODO: 削除
 pub fn get_pages_directory(project_root: impl AsRef<Path>) -> PathBuf {
     project_root.as_ref().join("src").join("pages")
 }
 
+// TODO: 削除
 pub fn get_templates_directory(project_root: impl AsRef<Path>) -> PathBuf {
     project_root.as_ref().join("src").join("templates")
 }
