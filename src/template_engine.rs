@@ -27,8 +27,10 @@ impl TemplateEngine {
         &mut self,
         name: &str,
         string: String,
-    ) -> Result<(), handlebars::TemplateError> {
-        self.0.register_template_string(name, string)
+    ) -> Result<(), Box<handlebars::TemplateError>> {
+        self.0
+            .register_template_string(name, string)
+            .map_err(Box::new)
     }
 
     pub fn register_template(&mut self, name: &str, tpl: handlebars::Template) {

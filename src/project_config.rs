@@ -2,7 +2,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    pipeline::{Entry, EntryType, EnumLoader, EnumTransformer, Pipeline, Step},
+    pipeline::{Entry, EnumLoader, EnumTransformer, Pipeline, Step},
     transformer::TemplateRenderer,
 };
 
@@ -20,7 +20,7 @@ impl Default for ProjectConfig {
                     name: "markdown to html".to_string(),
                     entry: Entry {
                         match_regex: Regex::new(".*[.]md").unwrap(),
-                        type_: EntryType::TextWithFrontmatter,
+                        type_: EnumLoader::TextWithFrontmatter,
                     },
                     steps: vec![
                         Step::Load {
@@ -43,7 +43,7 @@ impl Default for ProjectConfig {
                     name: "static resources".to_string(),
                     entry: Entry {
                         match_regex: Regex::new(".*").unwrap(),
-                        type_: EntryType::Blob,
+                        type_: EnumLoader::Blob,
                     },
                     steps: vec![],
                     output_extension: None,

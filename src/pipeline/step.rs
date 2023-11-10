@@ -22,8 +22,11 @@ pub enum Step {
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 #[serde(tag = "loader")]
 pub enum EnumLoader {
+    TextWithFrontmatter,
+    Text,
     Template,
     Json,
+    Blob,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
