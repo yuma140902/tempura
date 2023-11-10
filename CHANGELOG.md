@@ -1,8 +1,32 @@
 
+<a name="v0.4.2"></a>
+## [v0.4.2](https://github.com/yuma140902/tempura/compare/v0.4.1...v0.4.2)
+
+> 2023-11-10
+
+### :wrench: Chores
+
+* [`214c067`](https://github.com/yuma140902/tempura/commit/214c067893136ecb8fdd96a7ebae7ef2aef4d1e4) update dependencies (by yuma14)
+
+### :sparkles: Features
+
+* [`192c1ae`](https://github.com/yuma140902/tempura/commit/192c1ae6b62e7d56c104ec01dd958373cb89d5c2) remove TextAsTemplate (by yuma14)
+* [`f05d41f`](https://github.com/yuma140902/tempura/commit/f05d41f58e16d016ed6f3ad3e5abc0de41f8417d) add Reloader as a transformer (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#87](https://github.com/yuma140902/tempura/issues/87) from yuma140902/update-deps
+* Merge pull request [#86](https://github.com/yuma140902/tempura/issues/86) from yuma140902/add-loader-source
+
+
 <a name="v0.4.1"></a>
 ## [v0.4.1](https://github.com/yuma140902/tempura/compare/v0.4.0...v0.4.1)
 
 > 2023-11-10
+
+### :memo: Documentation Changes
+
+* [`4c7db67`](https://github.com/yuma140902/tempura/commit/4c7db67c36d1c19ceaa11ce6b6ab35be0dfd111b) update CHANGELOG.md for v0.4.1 [skip ci] (by yuma140902)
 
 ### :sparkles: Features
 
@@ -14,6 +38,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#85](https://github.com/yuma140902/tempura/issues/85) from yuma140902/release/v0.4.1
 * Merge pull request [#84](https://github.com/yuma140902/tempura/issues/84) from yuma140902/update-log
 * Merge pull request [#83](https://github.com/yuma140902/tempura/issues/83) from yuma140902/add-string-matcher
 
