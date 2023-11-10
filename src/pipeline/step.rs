@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 use serde::{Deserialize, Serialize};
 
@@ -13,7 +13,7 @@ pub enum Step {
         with: EnumLoader,
     },
     Transform {
-        input: String,
+        input: InputKey,
         output: String,
         with: EnumTransformer,
     },
@@ -33,4 +33,12 @@ pub enum EnumLoader {
 #[serde(tag = "transformer")]
 pub enum EnumTransformer {
     TemplateRenderer(TemplateRenderer),
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum InputKey {
+    Single(String),
+    List(Vec<String>),
+    Map(HashMap<String, String>),
 }
