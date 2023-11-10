@@ -4,9 +4,10 @@ use crate::value::Value;
 
 use super::Loader;
 
-pub struct StaticResourceLoader;
+pub struct BlobLoader;
 
-impl Loader for StaticResourceLoader {
+impl Loader for BlobLoader {
+    #[tracing::instrument(err, skip_all)]
     fn load(mut reader: impl std::io::Read) -> anyhow::Result<Value> {
         let mut buf = Vec::new();
         reader

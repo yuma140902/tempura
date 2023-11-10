@@ -18,6 +18,7 @@ fn decompose_frontmatter(text: &str) -> (Option<String>, Cow<'_, str>) {
 }
 
 impl Loader for TextWithFrontmatterLoader {
+    #[tracing::instrument(err, skip_all)]
     fn load(mut reader: impl Read) -> anyhow::Result<Value> {
         let mut buf = String::new();
         reader

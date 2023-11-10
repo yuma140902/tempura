@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 
+use tracing::info;
+
 use super::{Pipeline, Resource};
 
 pub struct Job<'a> {
@@ -9,9 +11,14 @@ pub struct Job<'a> {
 }
 
 impl<'a> Job<'a> {
+    #[tracing::instrument(ret, skip_all, fields(pipeline = self.pipeline.name, input_path = self.input_path.to_str()))]
     pub fn execute(&self, resource: &Resource) -> anyhow::Result<()> {
-        self.pipeline
-            .execute(&self.input_path, &self.output_path, resource)
+        info!("start");
+        let ret = self
+            .pipeline
+            .execute(&self.input_path, &self.output_path, resource);
+        info!("done");
+        ret
     }
 
     pub fn pipeline(&self) -> &Pipeline {

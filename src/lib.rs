@@ -21,7 +21,7 @@ pub use loader::*;
 pub use template_engine::*;
 pub use value::*;
 
-#[tracing::instrument]
+#[tracing::instrument(ret)]
 pub fn build(project_root: &Path) -> anyhow::Result<()> {
     let project_config_path = directory::get_project_config_path(project_root);
     let config: ProjectConfig = serde_yaml::from_str(
@@ -100,7 +100,7 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
     Ok(())
 }
 
-#[tracing::instrument]
+#[tracing::instrument(ret)]
 pub fn init(project_root: &Path) -> io::Result<()> {
     println!("not implemented yet");
 
