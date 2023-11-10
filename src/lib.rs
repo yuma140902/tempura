@@ -2,7 +2,7 @@ use std::{collections::HashMap, fs, io, path::Path};
 
 use anyhow::Context;
 use path_absolutize::Absolutize;
-use tracing::error;
+use tracing::{debug, error};
 use walkdir::WalkDir;
 
 use crate::project_config::ProjectConfig;
@@ -48,11 +48,17 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
         .map(|entry| entry.path().to_path_buf())
         .filter(|path| path.is_file())
     {
+        debug!("found file {}", filepath.display());
         let abs_filepath = filepath.absolutize().unwrap();
         let relative_filepath = directory::get_relative_path(&abs_filepath, &abs_project_root);
         let mut selected_pipeline = None;
         for pipeline in config.pipelines.iter() {
             if pipeline.accepts(&relative_filepath) {
+                debug!(
+                    "found pipeline \"{}\" for file \"{}\"",
+                    pipeline.name,
+                    relative_filepath.display()
+                );
                 selected_pipeline = Some(pipeline);
                 break;
             }
