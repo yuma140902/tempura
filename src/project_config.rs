@@ -9,7 +9,6 @@ use crate::{
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ProjectConfig {
     pub pipelines: Vec<Pipeline>,
-    pub output_base_directory: String,
 }
 
 impl Default for ProjectConfig {
@@ -50,7 +49,6 @@ impl Default for ProjectConfig {
                     output_key: "entry".to_string(),
                 },
             ],
-            output_base_directory: "public".to_string(),
         }
     }
 }
