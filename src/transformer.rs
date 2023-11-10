@@ -1,8 +1,6 @@
 use crate::{store::Store, Value};
 
 mod template_renderer {
-    use std::borrow::Cow;
-
     use anyhow::Context;
     use serde::{Deserialize, Serialize};
 

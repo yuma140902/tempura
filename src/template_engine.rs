@@ -1,6 +1,6 @@
 use handlebars::Handlebars;
 
-use crate::{handlebars_helpers, Value};
+use crate::handlebars_helpers;
 
 /// TemplateEngine is a wrapper for Handlebars and processes templates and [`Value`](crate::Value)s.
 pub struct TemplateEngine(Handlebars<'static>);
