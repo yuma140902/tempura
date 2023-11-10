@@ -113,6 +113,9 @@ impl Pipeline {
                         anyhow::bail!("no value found in the store for input key {:?}", input,)
                     }
                 }
+                Step::DumpStore => {
+                    println!("{store}");
+                }
             }
             debug!("finish");
         }

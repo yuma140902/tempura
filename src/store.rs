@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 
 use tracing::warn;
 
@@ -6,6 +6,7 @@ use crate::{pipeline::InputKey, Value};
 
 /// Store is a key-value storage for the build process.
 /// One store instance is created per [`Job`](crate::pipeline::Job).
+#[derive(Debug)]
 pub struct Store(HashMap<String, Value>);
 
 // TODO: Valueの変更を追跡してもとのファイルまで辿れるようにする
@@ -62,5 +63,26 @@ impl Store {
 impl Default for Store {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl Display for Store {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for (k, v) in &self.0 {
+            f.write_fmt(format_args!("{} = ", k))?;
+            match v {
+                Value::Bytes(bytes) => f.write_fmt(format_args!(
+                    "Bytes([{} ...])\n",
+                    bytes
+                        .iter()
+                        .take(20)
+                        .map(|i| format!("{}, ", i))
+                        .collect::<String>()
+                ))?,
+                Value::Template(_) => f.write_str("(compiled template)\n")?,
+                Value::JSON(json) => f.write_fmt(format_args!("{:#?}", json))?,
+            }
+        }
+        Ok(())
     }
 }

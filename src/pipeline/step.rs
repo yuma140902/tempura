@@ -17,6 +17,7 @@ pub enum Step {
         output: String,
         with: EnumTransformer,
     },
+    DumpStore,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
