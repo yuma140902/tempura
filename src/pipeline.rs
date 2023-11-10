@@ -98,19 +98,19 @@ impl Pipeline {
                     output,
                     with,
                 } => {
-                    if let Some(input) = store.get(input) {
+                    if let Some(input) = store.get_combined(input) {
                         debug!("transform input type: {}", input.get_type_name());
                         let value = match with {
                             EnumTransformer::TemplateRenderer(template_renderer) => {
                                 template_renderer
-                                    .transform(input, &store)
+                                    .transform(&input, &store)
                                     .with_context(|| "transformer failed".to_string())?
                             }
                         };
                         debug!("transform output type: {}", value.get_type_name());
                         store.set(output.to_string(), value);
                     } else {
-                        anyhow::bail!("no value found in the store for input key {}", input,)
+                        anyhow::bail!("no value found in the store for input key {:?}", input,)
                     }
                 }
             }

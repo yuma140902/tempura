@@ -4,7 +4,9 @@ use anyhow::Context;
 use path_absolutize::Absolutize;
 use tracing::{debug, info, span, Level};
 
-use crate::{BlobLoader, JsonLoader, Loader, TemplateLoader, TextWithFrontmatterLoader, Value};
+use crate::{
+    BlobLoader, JsonLoader, Loader, TemplateLoader, TextLoader, TextWithFrontmatterLoader, Value,
+};
 
 use super::Pipeline;
 
@@ -47,7 +49,7 @@ impl Resource {
                         TextWithFrontmatterLoader::load(bytes)
                     }
                     crate::pipeline::EnumLoader::Blob => BlobLoader::load(bytes),
-                    crate::pipeline::EnumLoader::Text => JsonLoader::load(bytes),
+                    crate::pipeline::EnumLoader::Text => TextLoader::load(bytes),
                 }
                 .with_context(|| format!("failed to preload with {:?}", with))?;
                 value_map.insert(index, value);

@@ -2,7 +2,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    pipeline::{Entry, EnumLoader, EnumTransformer, Pipeline, Step},
+    pipeline::{Entry, EnumLoader, EnumTransformer, InputKey, Pipeline, Step},
     transformer::TemplateRenderer,
 };
 
@@ -29,7 +29,7 @@ impl Default for ProjectConfig {
                             with: EnumLoader::Template,
                         },
                         Step::Transform {
-                            input: "entry".to_string(),
+                            input: InputKey::Single("entry".to_string()),
                             output: "template_result".to_string(),
                             with: EnumTransformer::TemplateRenderer(TemplateRenderer {
                                 template_key: "default".to_string(),
