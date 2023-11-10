@@ -16,7 +16,7 @@ pub use entry::*;
 pub use job::*;
 pub use resource::*;
 pub use step::*;
-use tracing::{debug, error, info, span, Level};
+use tracing::{debug, info, span, Level};
 
 use crate::{directory, store::Store, BlobLoader, Loader, TextWithFrontmatterLoader, Value};
 
@@ -64,7 +64,7 @@ impl Pipeline {
         let input_file = fs::File::open(&input_path)
             .with_context(|| format!("failed to open file \"{}\"", &input_path.display()))?;
 
-        info!("start loading entry with {:?} Loader", self.entry.type_);
+        debug!("start loading entry with {:?} Loader", self.entry.type_);
         let value = match self.entry.type_ {
             EntryType::TextWithFrontmatter => TextWithFrontmatterLoader::load(input_file),
             EntryType::Json => todo!(),
@@ -78,7 +78,7 @@ impl Pipeline {
             )
         })?;
         store.set("entry".to_string(), value);
-        info!("done loading entry");
+        debug!("done loading entry");
 
         for (index, step) in self.steps.iter().enumerate() {
             let step_span = span!(
@@ -88,9 +88,9 @@ impl Pipeline {
                 max = self.steps.len()
             );
             let _enter = step_span.enter();
-            info!("start");
+            debug!("start");
             // TODO: stepの処理
-            info!("done");
+            debug!("done");
         }
 
         let bytes = match store.get(&self.output_key) {
@@ -121,11 +121,13 @@ impl Pipeline {
             .append(false)
             .open(&output_path)
             .with_context(|| format!("failed to open output file \"{}\"", output_path.display()))?;
-        info!("start writing output file \"{}\"", output_path.display());
+        debug!("start writing output file \"{}\"", output_path.display());
         output_file
             .write_all(bytes)
             .with_context(|| format!("failed to write file \"{}\"", output_path.display()))?;
-        info!("done writing output file");
+        debug!("done writing output file");
+
+        info!("done pipeline");
 
         Ok(())
     }
