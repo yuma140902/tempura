@@ -35,17 +35,6 @@ impl Pipeline {
         Resource::load_for(self, project_root)
     }
 
-    fn get_needed_paths(&self) -> Vec<PathBuf> {
-        let mut paths = Vec::new();
-        for step in &self.steps {
-            match step {
-                Step::Load { path, .. } => paths.push(path.clone()),
-                Step::Transform { .. } => {}
-            }
-        }
-        paths
-    }
-
     fn execute(
         &self,
         input_path: impl AsRef<Path>,
