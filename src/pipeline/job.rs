@@ -57,7 +57,7 @@ impl<'a> Job<'a> {
             .write_all(&output_bytes)
             .with_context(|| format!("failed to write file \"{}\"", self.output_path.display()))?;
 
-        info!("done");
+        info!("finish pipeline");
         Ok(())
     }
 

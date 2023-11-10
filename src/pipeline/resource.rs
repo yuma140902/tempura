@@ -28,13 +28,16 @@ impl Resource {
             if let super::Step::Load { path, with, .. } = step {
                 let load_span = span!(Level::INFO, "prefetch", index = index, path = path.to_str());
                 let _enter = load_span.enter();
-                info!("start");
+                info!("start prefetch");
 
                 let path = path.absolutize_from(project_root).unwrap();
                 debug!("absolute path {}", path.display());
                 let bytes = fs::read(&path)
                     .with_context(|| format!("failed to load file {}", path.display()))?;
                 byte_map.insert(index, bytes);
+
+                info!("finish prefetch");
+                info!("start preload");
 
                 let value = match with {
                     crate::pipeline::EnumLoader::Template => {
@@ -45,7 +48,7 @@ impl Resource {
                 .with_context(|| format!("failed to preload with {:?}", with))?;
                 value_map.insert(index, value);
 
-                info!("done");
+                info!("finish preload");
             }
         }
         Ok(Self {
