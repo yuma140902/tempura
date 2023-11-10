@@ -5,6 +5,7 @@ use std::{
 };
 
 use anyhow::Context;
+use path_absolutize::Absolutize;
 use tracing::info;
 
 use super::Pipeline;
@@ -22,11 +23,11 @@ impl Resource {
         let mut map = HashMap::new();
         let project_root = project_root.as_ref();
         for path in pipeline.get_needed_paths() {
-            let path = project_root.join(path);
+            let path = path.absolutize_from(&project_root).unwrap();
             info!("prefetching resource {}", path.display());
             let bytes = fs::read(&path)
                 .with_context(|| format!("failed to load file {}", path.display()))?;
-            map.insert(path, bytes);
+            map.insert(path.to_path_buf(), bytes);
         }
         Ok(Self(map))
     }

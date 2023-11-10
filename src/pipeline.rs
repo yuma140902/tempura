@@ -70,10 +70,10 @@ impl Pipeline {
         input_path: impl AsRef<Path>,
         project_root: impl AsRef<Path>,
     ) -> PathBuf {
-        let pages_directory = directory::get_pages_directory(&project_root);
-        let output_directory = directory::get_output_directory(&project_root);
+        let src_dir = directory::get_src_directory(&project_root);
+        let output_dir = directory::get_output_directory(&project_root);
         let mut output_filepath =
-            output_directory.join(directory::get_relative_path(&input_path, pages_directory));
+            output_dir.join(directory::get_relative_path(&input_path, src_dir));
         if let Some(output_extension) = &self.output_extension {
             output_filepath.set_extension(output_extension);
         }

@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fs, io, path::Path};
 
 use anyhow::Context;
+use path_absolutize::Absolutize;
 use tracing::error;
 use walkdir::WalkDir;
 
@@ -36,18 +37,19 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
 
     dbg!(&config);
 
-    let pages_directory = directory::get_pages_directory(project_root);
+    let src_dir = directory::get_src_directory(project_root);
+    let abs_project_root = project_root.absolutize().unwrap();
 
     let mut jobs = vec![];
 
-    for filepath in WalkDir::new(&pages_directory)
+    for filepath in WalkDir::new(&src_dir)
         .into_iter()
         .filter_map(|entry| entry.ok())
         .map(|entry| entry.path().to_path_buf())
         .filter(|path| path.is_file())
     {
-        // TODO: filepathはpages_directoryからの相対パスのはずだが確証がないので調べる
-        let relative_filepath = filepath;
+        let abs_filepath = filepath.absolutize().unwrap();
+        let relative_filepath = directory::get_relative_path(&abs_filepath, &abs_project_root);
         let mut selected_pipeline = None;
         for pipeline in config.pipelines.iter() {
             if pipeline.accepts(&relative_filepath) {
@@ -61,7 +63,7 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
                 error!("File {}: No pipeline found", relative_filepath.display());
                 continue;
             }
-            Some(pipeline) => jobs.push(pipeline.to_job(&relative_filepath, &project_root)),
+            Some(pipeline) => jobs.push(pipeline.to_job(&abs_filepath, &abs_project_root)),
         }
     }
 
@@ -71,7 +73,7 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
         resources.insert(
             &pipeline.name,
             pipeline
-                .prefetch_resources(&project_root)
+                .prefetch_resources(&abs_project_root)
                 .with_context(|| {
                     format!(
                         "failed to prefetch files for pipeline \"{}\"",
