@@ -71,14 +71,13 @@ impl Display for Store {
         for (k, v) in &self.0 {
             f.write_fmt(format_args!("{} = ", k))?;
             match v {
-                Value::Bytes(bytes) => f.write_fmt(format_args!(
-                    "Bytes([{} ...])\n",
-                    bytes
-                        .iter()
-                        .take(20)
-                        .map(|i| format!("{}, ", i))
-                        .collect::<String>()
-                ))?,
+                Value::Bytes(bytes) => {
+                    f.write_str("Bytes([")?;
+                    for byte in bytes.iter().take(20) {
+                        f.write_fmt(format_args!("{}, ", byte))?;
+                    }
+                    f.write_str("...])\n")?;
+                }
                 Value::Template(_) => f.write_str("(compiled template)\n")?,
                 Value::JSON(json) => f.write_fmt(format_args!("{:#?}", json))?,
             }
