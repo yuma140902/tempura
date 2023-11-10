@@ -31,6 +31,10 @@ impl TemplateEngine {
         self.0.register_template_string(name, string)
     }
 
+    pub fn register_template(&mut self, name: &str, tpl: handlebars::Template) {
+        self.0.register_template(name, tpl)
+    }
+
     pub fn render(
         &self,
         template_name: &str,

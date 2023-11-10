@@ -16,13 +16,22 @@ mod template_renderer {
     impl Transformer for TemplateRenderer {
         fn transform(&self, value: &Value, store: &Store) -> anyhow::Result<Value> {
             let mut engine = TemplateEngine::new();
-            let template_string = if let Some(template_value) = store.get(&self.template_key) {
+            if let Some(template_value) = store.get(&self.template_key) {
                 match template_value {
-                    Value::JSON(serde_json::Value::String(string)) => string,
+                    Value::JSON(serde_json::Value::String(string)) => {
+                        engine
+                            .register_template_from_string(&self.template_key, string.to_string())
+                            .with_context(|| {
+                                "failed to register template from string".to_string()
+                            })?;
+                    }
+                    Value::Template(template) => {
+                        engine.register_template(&self.template_key, template.clone());
+                    }
                     _ => {
-                        // TODO: すべてのanyhow::bailに対してtracing::instruments(err)を付ける
+                        // TODO: すべてのanyhow::bailと.context、.with_contextに対してtracing::instruments(err)を付ける
                         anyhow::bail!(
-                            "template value should be string or Template, but it was {}",
+                            "template value should be string or template, but it was {}",
                             template_value.get_type_name()
                         )
                     }
@@ -32,11 +41,7 @@ mod template_renderer {
                     "no template value found for template_key {}",
                     self.template_key
                 )
-            };
-
-            engine
-                .register_template_from_string(&self.template_key, template_string.to_string())
-                .with_context(|| "failed to register template from string".to_string())?;
+            }
 
             let result_string = engine
                 .render(
@@ -67,6 +72,7 @@ mod template_renderer {
                 }
                 serde_json::Value::Object(_) => Ok(json.clone()),
             },
+            Value::Template(_) => anyhow::bail!("failed because template data is also template"),
         }
     }
 }

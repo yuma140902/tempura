@@ -1,12 +1,13 @@
-use serde::{Deserialize, Serialize};
+use handlebars::Template;
 
 /// [`Value`] is data read from a file by the [`Loader`](crate::loader::Loader).
 /// Conceptually, it is the same as JSON.
 /// It is hierarchical and has types such as object, string, and numeric.
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Clone)]
 pub enum Value {
     Bytes(Vec<u8>),
+    Template(Template),
     JSON(serde_json::Value),
 }
 
@@ -15,6 +16,7 @@ impl Value {
         match self {
             Value::Bytes(_) => "bytes",
             Value::JSON(json) => get_json_type_name(json),
+            Value::Template(_) => "template",
         }
     }
 }

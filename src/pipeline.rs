@@ -38,9 +38,9 @@ impl Pipeline {
 
     #[tracing::instrument(err, skip(self, project_root), fields(pipeline = self.name))]
     pub fn prefetch_resources(&self, project_root: impl AsRef<Path>) -> anyhow::Result<Resource> {
-        info!("start");
+        info!("start prepare");
         let ret = Resource::load_for(self, project_root);
-        info!("done");
+        info!("finish prepare");
         ret
     }
 
@@ -55,7 +55,7 @@ impl Pipeline {
         }
         .with_context(|| format!("failed to load entry with {:?} Loader", self.entry.type_))?;
         store.set("entry".to_string(), value);
-        debug!("done loading entry");
+        debug!("finish loading entry");
 
         for (index, step) in self.steps.iter().enumerate() {
             let step_span = span!(
@@ -93,7 +93,6 @@ impl Pipeline {
                 } => {
                     if let Some(input) = store.get(input) {
                         debug!("transform input type: {}", input.get_type_name());
-                        debug!("tranform input {:?}", input);
                         let value = match with {
                             EnumTransformer::TemplateRenderer(template_renderer) => {
                                 template_renderer
@@ -101,7 +100,6 @@ impl Pipeline {
                                     .with_context(|| "transformer failed".to_string())?
                             }
                         };
-                        debug!("tranform output {:?}", value);
                         debug!("transform output type: {}", value.get_type_name());
                         store.set(output.to_string(), value);
                     } else {
@@ -109,8 +107,7 @@ impl Pipeline {
                     }
                 }
             }
-            // TODO: stepの処理
-            debug!("done");
+            debug!("finish");
         }
 
         let bytes = match store.get_owned(&self.output_key) {
