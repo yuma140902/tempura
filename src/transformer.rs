@@ -36,7 +36,7 @@ mod template_renderer {
 
             engine
                 .register_template_from_string(&self.template_key, template_string.to_string())
-                .with_context(|| format!("failed to register template from string"))?;
+                .with_context(|| "failed to register template from string".to_string())?;
 
             let result_string = engine
                 .render(

@@ -98,7 +98,7 @@ impl Pipeline {
                             EnumTransformer::TemplateRenderer(template_renderer) => {
                                 template_renderer
                                     .transform(input, &store)
-                                    .with_context(|| format!("transformer failed"))?
+                                    .with_context(|| "transformer failed".to_string())?
                             }
                         };
                         debug!("tranform output {:?}", value);
@@ -152,7 +152,7 @@ impl Pipeline {
         Job {
             input_path: input_path.as_ref().to_path_buf(),
             output_path: self.get_output_path(&input_path, &project_root),
-            pipeline: &self,
+            pipeline: self,
         }
     }
 }

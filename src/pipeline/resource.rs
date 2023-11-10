@@ -25,31 +25,27 @@ impl Resource {
         let mut value_map = HashMap::new();
         let project_root = project_root.as_ref();
         for (index, step) in pipeline.steps.iter().enumerate() {
-            match step {
-                super::Step::Load { path, with, .. } => {
-                    let load_span =
-                        span!(Level::INFO, "prefetch", index = index, path = path.to_str());
-                    let _enter = load_span.enter();
-                    info!("start");
+            if let super::Step::Load { path, with, .. } = step {
+                let load_span = span!(Level::INFO, "prefetch", index = index, path = path.to_str());
+                let _enter = load_span.enter();
+                info!("start");
 
-                    let path = path.absolutize_from(&project_root).unwrap();
-                    debug!("absolute path {}", path.display());
-                    let bytes = fs::read(&path)
-                        .with_context(|| format!("failed to load file {}", path.display()))?;
-                    byte_map.insert(index, bytes);
+                let path = path.absolutize_from(project_root).unwrap();
+                debug!("absolute path {}", path.display());
+                let bytes = fs::read(&path)
+                    .with_context(|| format!("failed to load file {}", path.display()))?;
+                byte_map.insert(index, bytes);
 
-                    let value = match with {
-                        crate::pipeline::EnumLoader::Template => {
-                            TemplateLoader::load(&byte_map.get(&index).unwrap()[..])
-                        }
-                        crate::pipeline::EnumLoader::Json => todo!(),
+                let value = match with {
+                    crate::pipeline::EnumLoader::Template => {
+                        TemplateLoader::load(&byte_map.get(&index).unwrap()[..])
                     }
-                    .with_context(|| format!("failed to preload with {:?}", with))?;
-                    value_map.insert(index, value);
-
-                    info!("done");
+                    crate::pipeline::EnumLoader::Json => todo!(),
                 }
-                _ => {}
+                .with_context(|| format!("failed to preload with {:?}", with))?;
+                value_map.insert(index, value);
+
+                info!("done");
             }
         }
         Ok(Self {
