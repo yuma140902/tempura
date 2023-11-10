@@ -14,11 +14,13 @@ mod loader;
 pub mod pipeline;
 pub mod project_config;
 pub mod store;
+mod string_matcher;
 mod template_engine;
 pub mod transformer;
 mod value;
 
 pub use loader::*;
+pub use string_matcher::*;
 pub use template_engine::*;
 pub use value::*;
 

@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     pipeline::{Entry, EnumLoader, EnumTransformer, InputKey, Pipeline, Step},
     transformer::{CurrentDirectory, TemplateRenderer},
+    StringMatcher,
 };
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -18,7 +19,9 @@ impl Default for ProjectConfig {
                 Pipeline {
                     name: "markdown to html".to_string(),
                     entry: Entry {
-                        match_regex: Regex::new(".*[.]md").unwrap(),
+                        match_regex: StringMatcher::Regex {
+                            regex: Regex::new("^.*[.]md$").unwrap(),
+                        },
                         type_: EnumLoader::TextWithFrontmatter,
                     },
                     steps: vec![
@@ -42,7 +45,9 @@ impl Default for ProjectConfig {
                 Pipeline {
                     name: "static resources".to_string(),
                     entry: Entry {
-                        match_regex: Regex::new(".*").unwrap(),
+                        match_regex: StringMatcher::Regex {
+                            regex: Regex::new(".*").unwrap(),
+                        },
                         type_: EnumLoader::Blob,
                     },
                     steps: vec![],
