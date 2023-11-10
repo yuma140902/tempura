@@ -39,7 +39,7 @@ impl Transformer for Reloader {
                 EnumLoader::Json => JsonLoader::load(&bytes[..]),
                 EnumLoader::Blob => BlobLoader::load(&bytes[..]),
             }
-            .with_context(|| format!("failed to load value from bytes")),
+            .with_context(|| "failed to load value from bytes".to_string()),
             _ => anyhow::bail!(
                 "value should be string or bytes, but it was {}",
                 value.get_type_name()
