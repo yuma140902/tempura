@@ -1,4 +1,30 @@
 
+<a name="v0.4.0"></a>
+## [v0.4.0](https://github.com/yuma140902/tempura/compare/v0.3.3...v0.4.0)
+
+> 2023-11-10
+
+### :sparkles: Features
+
+* [`5db1218`](https://github.com/yuma140902/tempura/commit/5db12183d50b261f65aa6fc062a8a008e14d8fa6) remove generator, add pipeline (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#81](https://github.com/yuma140902/tempura/issues/81) from yuma140902/init-cmd-warning
+* Merge pull request [#80](https://github.com/yuma140902/tempura/issues/80) from yuma140902/fix-resolve-helper
+* Merge pull request [#79](https://github.com/yuma140902/tempura/issues/79) from yuma140902/fix-resolve-helper
+* Merge pull request [#78](https://github.com/yuma140902/tempura/issues/78) from yuma140902/add-dump-store
+* Merge pull request [#76](https://github.com/yuma140902/tempura/issues/76) from yuma140902/remove-output-base-dir
+* Merge pull request [#73](https://github.com/yuma140902/tempura/issues/73) from yuma140902/text-to-template
+* Merge pull request [#72](https://github.com/yuma140902/tempura/issues/72) from yuma140902/jsonpath
+* Merge pull request [#71](https://github.com/yuma140902/tempura/issues/71) from yuma140902/add-combine
+* Merge pull request [#70](https://github.com/yuma140902/tempura/issues/70) from yuma140902/add-json-loader
+* Merge pull request [#69](https://github.com/yuma140902/tempura/issues/69) from yuma140902/text-loader
+* Merge pull request [#68](https://github.com/yuma140902/tempura/issues/68) from yuma140902/precompile-template
+* Merge pull request [#67](https://github.com/yuma140902/tempura/issues/67) from yuma140902/add-prefetch-to-value
+* Merge pull request [#66](https://github.com/yuma140902/tempura/issues/66) from yuma140902/v0.4.x
+
+
 <a name="v0.3.3"></a>
 ## [v0.3.3](https://github.com/yuma140902/tempura/compare/v0.3.2...v0.3.3)
 
@@ -8,8 +34,13 @@
 
 * [`a0ab7c6`](https://github.com/yuma140902/tempura/commit/a0ab7c672b81640806f1f897cf06716f5fcd95d5) update deps (by yuma14)
 
+### :memo: Documentation Changes
+
+* [`c5d98fa`](https://github.com/yuma140902/tempura/commit/c5d98fabfe420280905ce255b0e927a8549878bc) update CHANGELOG.md for v0.3.3 [skip ci] (by yuma140902)
+
 ### Pull Requests
 
+* Merge pull request [#65](https://github.com/yuma140902/tempura/issues/65) from yuma140902/release/v0.3.3
 * Merge pull request [#64](https://github.com/yuma140902/tempura/issues/64) from yuma140902/update-deps
 
 
