@@ -68,7 +68,9 @@ impl Pipeline {
             debug!("start");
             match step {
                 Step::Load { key, with, .. } => {
-                    if let Some(bytes) = resource.get_bytes(key) {
+                    if let Some(value) = resource.get_value(&index) {
+                        store.set(key.to_string(), value.clone());
+                    } else if let Some(bytes) = resource.get_bytes(&index) {
                         let value = match with {
                             EnumLoader::Template => TemplateLoader::load(bytes),
                             EnumLoader::Json => todo!(),
@@ -96,7 +98,7 @@ impl Pipeline {
                             EnumTransformer::TemplateRenderer(template_renderer) => {
                                 template_renderer
                                     .transform(input, &store)
-                                    .with_context(|| format!("transformer failed"))?
+                                    .with_context(|| "transformer failed".to_string())?
                             }
                         };
                         debug!("tranform output {:?}", value);
@@ -150,7 +152,7 @@ impl Pipeline {
         Job {
             input_path: input_path.as_ref().to_path_buf(),
             output_path: self.get_output_path(&input_path, &project_root),
-            pipeline: &self,
+            pipeline: self,
         }
     }
 }
