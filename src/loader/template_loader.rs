@@ -1,4 +1,5 @@
 use anyhow::Context;
+use handlebars::Template;
 
 use crate::{Loader, Value};
 
@@ -17,6 +18,9 @@ impl Loader for TemplateLoader {
             .read_to_string(&mut buf)
             .context("Could not read String")?;
 
-        Ok(Value::JSON(serde_json::Value::String(buf)))
+        let template = Template::compile(&buf)
+            .with_context(|| format!("failed to compile template: {}", buf))?;
+
+        Ok(Value::Template(template))
     }
 }
