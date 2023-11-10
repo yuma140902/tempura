@@ -2,7 +2,7 @@ use anyhow::Context;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    pipeline::EnumLoader, BlobLoader, JsonLoader, Loader, TemplateLoader,
+    pipeline::EnumLoader, BlobLoader, JsonLoader, Loader, TemplateLoader, TextLoader,
     TextWithFrontmatterLoader, Value,
 };
 
@@ -25,7 +25,7 @@ impl Transformer for Reloader {
                 let reader = string.as_bytes();
                 match self.loader {
                     EnumLoader::TextWithFrontmatter => TextWithFrontmatterLoader::load(reader),
-                    EnumLoader::Text => TextWithFrontmatterLoader::load(reader),
+                    EnumLoader::Text => TextLoader::load(reader),
                     EnumLoader::Template => TemplateLoader::load(reader),
                     EnumLoader::Json => JsonLoader::load(reader),
                     EnumLoader::Blob => BlobLoader::load(reader),
@@ -34,7 +34,7 @@ impl Transformer for Reloader {
             }
             Value::Bytes(bytes) => match self.loader {
                 EnumLoader::TextWithFrontmatter => TextWithFrontmatterLoader::load(&bytes[..]),
-                EnumLoader::Text => TextWithFrontmatterLoader::load(&bytes[..]),
+                EnumLoader::Text => TextLoader::load(&bytes[..]),
                 EnumLoader::Template => TemplateLoader::load(&bytes[..]),
                 EnumLoader::Json => JsonLoader::load(&bytes[..]),
                 EnumLoader::Blob => BlobLoader::load(&bytes[..]),
