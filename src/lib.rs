@@ -129,6 +129,7 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
 #[tracing::instrument(ret)]
 pub fn init(project_root: &Path) -> io::Result<()> {
     println!("not implemented yet");
+    println!("Use older version such as v0.3.3 for now");
 
     Ok(())
 }
