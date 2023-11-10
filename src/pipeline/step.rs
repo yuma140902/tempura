@@ -2,7 +2,7 @@ use std::{collections::HashMap, path::PathBuf};
 
 use serde::{Deserialize, Serialize};
 
-use crate::transformer::{JsonPathQuery, TemplateRenderer};
+use crate::transformer::{JsonPathQuery, JsonPathQueryAll, TemplateRenderer};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -34,6 +34,7 @@ pub enum EnumLoader {
 pub enum EnumTransformer {
     TemplateRenderer(TemplateRenderer),
     JsonPath(JsonPathQuery),
+    JsonPathAll(JsonPathQueryAll),
 }
 
 #[derive(Debug, Deserialize, Serialize)]
