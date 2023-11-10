@@ -1,12 +1,30 @@
 
+<a name="v0.4.3"></a>
+## [v0.4.3](https://github.com/yuma140902/tempura/compare/v0.4.2...v0.4.3)
+
+> 2023-11-10
+
+### :bug: Bug Fixes
+
+* [`799c34e`](https://github.com/yuma140902/tempura/commit/799c34e30d2b76ac9129e152b623b75a7fe932bd) not using TextLoader where it should be used (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#89](https://github.com/yuma140902/tempura/issues/89) from yuma140902/fix-text-loader
+
+
 <a name="v0.4.2"></a>
 ## [v0.4.2](https://github.com/yuma140902/tempura/compare/v0.4.1...v0.4.2)
 
-> 2023-11-10
+> 2023-11-11
 
 ### :wrench: Chores
 
 * [`214c067`](https://github.com/yuma140902/tempura/commit/214c067893136ecb8fdd96a7ebae7ef2aef4d1e4) update dependencies (by yuma14)
+
+### :memo: Documentation Changes
+
+* [`3a54cea`](https://github.com/yuma140902/tempura/commit/3a54cea402846aff226d6a6d88d9f386804e250e) update CHANGELOG.md for v0.4.2 [skip ci] (by yuma140902)
 
 ### :sparkles: Features
 
@@ -15,6 +33,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#88](https://github.com/yuma140902/tempura/issues/88) from yuma140902/release/v0.4.2
 * Merge pull request [#87](https://github.com/yuma140902/tempura/issues/87) from yuma140902/update-deps
 * Merge pull request [#86](https://github.com/yuma140902/tempura/issues/86) from yuma140902/add-loader-source
 
