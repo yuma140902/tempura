@@ -32,11 +32,7 @@ impl<'a> Job<'a> {
             .read_to_end(&mut input_bytes)
             .with_context(|| format!("failed to read file \"{}\"", &self.input_path.display()))?;
 
-        let entry_directory = if let Some(parent) = self.input_path.parent() {
-            Some(parent.to_string_lossy().to_string())
-        } else {
-            None
-        };
+        let entry_directory = self.input_path.parent().map(|parent| parent.to_string_lossy().to_string());
 
         let output_bytes = self
             .pipeline
