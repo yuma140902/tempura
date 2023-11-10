@@ -20,6 +20,10 @@ impl Store {
     pub fn set(&mut self, key: String, value: Value) {
         self.0.insert(key, value);
     }
+
+    pub fn get_owned(mut self, key: &str) -> Option<Value> {
+        self.0.remove(key)
+    }
 }
 
 impl Default for Store {

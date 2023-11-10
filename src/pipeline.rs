@@ -45,38 +45,16 @@ impl Pipeline {
         ret
     }
 
-    fn execute(
-        &self,
-        input_path: impl AsRef<Path>,
-        output_path: impl AsRef<Path>,
-        resource: &Resource,
-    ) -> anyhow::Result<()> {
-        let input_path = input_path.as_ref();
-        let output_path = output_path.as_ref();
-        info!(
-            "start pipeline {} -> {}",
-            input_path.display(),
-            output_path.display(),
-        );
-
+    fn execute(&self, entry_bytes: Vec<u8>, resource: &Resource) -> anyhow::Result<Vec<u8>> {
         let mut store = Store::new();
-
-        let input_file = fs::File::open(&input_path)
-            .with_context(|| format!("failed to open file \"{}\"", &input_path.display()))?;
 
         debug!("start loading entry with {:?} Loader", self.entry.type_);
         let value = match self.entry.type_ {
-            EntryType::TextWithFrontmatter => TextWithFrontmatterLoader::load(input_file),
+            EntryType::TextWithFrontmatter => TextWithFrontmatterLoader::load(&entry_bytes[..]),
             EntryType::Json => todo!(),
-            EntryType::Blob => BlobLoader::load(input_file),
+            EntryType::Blob => BlobLoader::load(&entry_bytes[..]),
         }
-        .with_context(|| {
-            format!(
-                "failed to load file \"{}\" with {:?} Loader",
-                &input_path.display(),
-                self.entry.type_
-            )
-        })?;
+        .with_context(|| format!("failed to load entry with {:?} Loader", self.entry.type_))?;
         store.set("entry".to_string(), value);
         debug!("done loading entry");
 
@@ -93,14 +71,14 @@ impl Pipeline {
             debug!("done");
         }
 
-        let bytes = match store.get(&self.output_key) {
+        let bytes = match store.get_owned(&self.output_key) {
             Some(output_value) => match output_value {
-                Value::JSON(serde_json::Value::String(string)) => string.as_bytes(),
+                Value::JSON(serde_json::Value::String(string)) => string.into_bytes(),
                 Value::Bytes(bytes) => bytes,
                 value => {
                     anyhow::bail!(
                         "output value type should be string or bytes, but it was {} (output_key={})",
-                        get_value_type_name(value),
+                        get_value_type_name(&value),
                         self.output_key
                     )
                 }
@@ -110,26 +88,7 @@ impl Pipeline {
             }
         };
 
-        if let Some(parent) = output_path.parent() {
-            debug!("create parent directory");
-            fs::create_dir_all(parent)
-                .with_context(|| format!("failed to create directory \"{}\"", parent.display()))?;
-        }
-        let mut output_file = fs::OpenOptions::new()
-            .write(true)
-            .create(true)
-            .append(false)
-            .open(&output_path)
-            .with_context(|| format!("failed to open output file \"{}\"", output_path.display()))?;
-        debug!("start writing output file \"{}\"", output_path.display());
-        output_file
-            .write_all(bytes)
-            .with_context(|| format!("failed to write file \"{}\"", output_path.display()))?;
-        debug!("done writing output file");
-
-        info!("done pipeline");
-
-        Ok(())
+        Ok(bytes)
     }
 
     fn get_output_path(
