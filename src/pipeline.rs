@@ -33,7 +33,7 @@ impl Pipeline {
     pub fn accepts(&self, path: impl AsRef<Path>) -> bool {
         self.entry
             .match_regex
-            .is_match(&path.as_ref().to_string_lossy().replace("\\", "/"))
+            .is_match(&path.as_ref().to_string_lossy().replace('\\', "/"))
     }
 
     #[tracing::instrument(err, skip(self, project_root), fields(pipeline = self.name))]
