@@ -90,6 +90,23 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
         );
     }
 
+    let mut hash = HashMap::new();
+    println!("EXECUTION PLAN");
+    println!("==============");
+    for job in &jobs {
+        hash.insert(job.input_path().clone(), job.output_path().clone());
+        println!(
+            "{} -> {}",
+            job.input_path().display(),
+            job.output_path().display()
+        );
+    }
+    println!("==============");
+    handlebars_helpers::PROJECT_ROOT
+        .set(abs_project_root.to_path_buf())
+        .unwrap();
+    handlebars_helpers::RESOLVE_TABLE.set(hash).unwrap();
+
     for job in jobs {
         job.execute(resources.get(&&job.pipeline().name).unwrap_or_else(|| {
             panic!(

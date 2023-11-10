@@ -1,12 +1,15 @@
 //! This module defines a custom Helper for Tempura.
 //! Helper is a term used in Handlebars to refer to a kind of function that can be called from a template.
 
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 use handlebars::{
     handlebars_helper, Context, Handlebars, Helper, HelperResult, JsonRender, Output,
     RenderContext, RenderError,
 };
+use once_cell::sync::OnceCell;
+use path_absolutize::Absolutize;
+use tracing::debug;
 
 use crate::directory;
 
@@ -18,7 +21,8 @@ handlebars_helper!(md2html: |markdown: String| {
     html_output
 });
 
-// TODO:resolveはoutput_extensionを解釈できない
+/// - 入力: テンプレートの場所を基準とした相対パス
+/// - 出力: 出力ディレクトリを基準とした相対パス
 pub fn resolve(
     h: &Helper<'_, '_>,
     _: &Handlebars<'_>,
@@ -31,32 +35,45 @@ pub fn resolve(
             .and_then(|v| v.value().as_str())
             .ok_or_else(|| RenderError::new("target_input_path not specified"))?,
     );
-    let project_root = PathBuf::from(
+    let cwd = PathBuf::from(
         ctx.data()
-            .get("project_root")
-            .ok_or_else(|| RenderError::new("project_root not specified"))?
+            .get("___current_directory")
+            .ok_or_else(|| RenderError::new("___current_directory not specified"))?
             .render()
             .as_str(),
     );
+    let project_root = PROJECT_ROOT.get().unwrap();
+    let table = RESOLVE_TABLE.get().unwrap();
     let output_directory = directory::get_output_directory(project_root);
-    let self_output_filepath = PathBuf::from(
-        ctx.data()
-            .get("output_file")
-            .ok_or_else(|| RenderError::new("output_file not specified"))?
-            .render()
-            .as_str(),
-    );
-    let self_output_parent = self_output_filepath.parent().ok_or_else(|| {
+
+    debug!("cwd = {}", cwd.display());
+    let abs_cwd = cwd.absolutize_from(&project_root).map_err(|e| {
+        RenderError::new(format!("failed to absolutize cwd {} : {e}", cwd.display()))
+    })?;
+    debug!("abs_cwd = {}", abs_cwd.display());
+    let abs_input_path = target_input_path.absolutize_from(abs_cwd).map_err(|e| {
         RenderError::new(format!(
-            "could not get parent directory for output_file '{}'",
-            self_output_filepath.display()
+            "failed to absolutize input path {} : {e}",
+            target_input_path.display()
         ))
     })?;
+    debug!("abs_input_path = {}", abs_input_path.display());
 
-    let target_output_path = output_directory.join(target_input_path); //TODO:
-                                                                       //rule.export_extension
-                                                                       //rule.export_base
-    let relative_path = directory::get_relative_path(target_output_path, self_output_parent);
-    write!(out, "{}", relative_path.display())?;
+    let abs_output_path = table.get(abs_input_path.as_ref()).ok_or_else(|| {
+        RenderError::new(format!(
+            "could not find path {} in table",
+            abs_input_path.display()
+        ))
+    })?;
+    debug!("abs_output_path = {}", abs_output_path.display());
+
+    let rel_output_path = directory::get_relative_path(abs_output_path, &output_directory);
+    debug!("rel_output_path = {}", rel_output_path.display());
+
+    let output_str = rel_output_path.to_string_lossy().replace("\\", "/");
+    write!(out, "{}", output_str)?;
     Ok(())
 }
+
+pub static PROJECT_ROOT: OnceCell<PathBuf> = OnceCell::new();
+pub static RESOLVE_TABLE: OnceCell<HashMap<PathBuf, PathBuf>> = OnceCell::new();
