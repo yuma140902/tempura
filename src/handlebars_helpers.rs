@@ -18,7 +18,7 @@ handlebars_helper!(md2html: |markdown: String| {
     html_output
 });
 
-// TODO:
+// TODO:resolveはoutput_extensionを解釈できない
 pub fn resolve(
     h: &Helper<'_, '_>,
     _: &Handlebars<'_>,

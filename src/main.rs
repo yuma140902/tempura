@@ -1,10 +1,8 @@
-use std::io;
-
 use clap::Parser;
 use tempura::cli::{Cli, Commands};
 use tracing::debug;
 
-fn main() -> io::Result<()> {
+fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     #[cfg(debug_assertions)]

@@ -21,3 +21,21 @@ impl Default for TemplateEngine {
         Self::new()
     }
 }
+
+impl TemplateEngine {
+    pub fn register_template_from_string(
+        &mut self,
+        name: &str,
+        string: String,
+    ) -> Result<(), handlebars::TemplateError> {
+        self.0.register_template_string(name, string)
+    }
+
+    pub fn render(
+        &self,
+        template_name: &str,
+        value: &serde_json::Value,
+    ) -> Result<String, handlebars::RenderError> {
+        self.0.render(template_name, value)
+    }
+}

@@ -1,147 +1,115 @@
-use std::{
-    borrow::{Borrow, Cow},
-    collections::HashMap,
-    fs, io,
-    path::{Path, PathBuf},
-};
+use std::{collections::HashMap, fs, io, path::Path};
 
-use generator::Generator;
-use project_config::GeneratorRule;
-use tracing::{error, info};
+use anyhow::Context;
+use path_absolutize::Absolutize;
+use tracing::{debug, error};
 use walkdir::WalkDir;
 
 use crate::project_config::ProjectConfig;
 
 pub mod cli;
 pub mod directory;
-pub mod generator;
 pub mod handlebars_helpers;
 mod loader;
+pub mod pipeline;
 pub mod project_config;
+pub mod store;
 mod template_engine;
+pub mod transformer;
 mod value;
 
 pub use loader::*;
 pub use template_engine::*;
 pub use value::*;
 
-fn build_single_file(
-    filepath: PathBuf,
-    project_root: &Path,
-    rule: Option<&GeneratorRule>,
-    generators: &HashMap<String, Box<dyn Generator>>,
-) -> io::Result<()> {
-    let rule = if let Some(rule) = rule {
-        Cow::Borrowed(rule)
-    } else {
-        Cow::Owned(GeneratorRule::default())
-    };
-
-    let pages_directory = directory::get_pages_directory(project_root);
-    let mut output_directory = directory::get_output_directory(project_root);
-    if let Some(ref export_base) = rule.export_base {
-        output_directory = output_directory.join(export_base);
-    }
-
-    let mut output_filepath =
-        output_directory.join(directory::get_relative_path(&filepath, pages_directory));
-    if let Some(ref export_extension) = rule.export_extension {
-        output_filepath.set_extension(export_extension);
-    }
-    info!(
-        "generating {} from {} with generator '{}'",
-        output_filepath.display(),
-        filepath.display(),
-        rule.generator,
-    );
-
-    let generator = generators.get(&rule.generator).unwrap();
-    generator
-        .generate(&filepath, &output_filepath, project_root.as_ref(), &rule)
-        .unwrap();
-
-    Ok(())
-}
-
-#[tracing::instrument]
-pub fn build(project_root: &Path) -> io::Result<()> {
-    let pages_directory = directory::get_pages_directory(project_root);
+#[tracing::instrument(ret)]
+pub fn build(project_root: &Path) -> anyhow::Result<()> {
     let project_config_path = directory::get_project_config_path(project_root);
-    let config: ProjectConfig = serde_json::from_str(&fs::read_to_string(project_config_path)?)?;
+    let config: ProjectConfig = serde_yaml::from_str(
+        &fs::read_to_string(&project_config_path)
+            .with_context(|| format!("could not load file {}", project_config_path.display()))?,
+    )
+    .with_context(|| {
+        format!(
+            "failed to parse project config {}",
+            project_config_path.display()
+        )
+    })?;
 
-    let generators = generator::get_generators(project_root);
+    dbg!(&config);
 
-    for filepath in WalkDir::new(&pages_directory)
+    let src_dir = directory::get_src_directory(project_root);
+    let abs_project_root = project_root.absolutize().unwrap();
+
+    let mut jobs = vec![];
+
+    for filepath in WalkDir::new(&src_dir)
         .into_iter()
-        .filter_map(|e| e.ok())
-        .map(|e| e.path().to_path_buf())
-        .filter(|p| p.is_file())
+        .filter_map(|entry| entry.ok())
+        .map(|entry| entry.path().to_path_buf())
+        .filter(|path| path.is_file())
     {
-        let mut selected_rule = None;
-        for rule in config.generator.rules.iter() {
-            if rule.match_.is_match(filepath.to_string_lossy().borrow()) {
-                selected_rule = Some(rule);
+        debug!("found file {}", filepath.display());
+        let abs_filepath = filepath.absolutize().unwrap();
+        let relative_filepath = directory::get_relative_path(&abs_filepath, &abs_project_root);
+        let mut selected_pipeline = None;
+        for pipeline in config.pipelines.iter() {
+            if pipeline.accepts(&relative_filepath) {
+                debug!(
+                    "found pipeline \"{}\" for file \"{}\"",
+                    pipeline.name,
+                    relative_filepath.display()
+                );
+                selected_pipeline = Some(pipeline);
+                break;
             }
         }
 
-        let result = build_single_file(filepath, project_root, selected_rule, &generators);
-        if let Err(err) = result {
-            error!("error: {:?}", err);
+        match selected_pipeline {
+            None => {
+                error!("File {}: No pipeline found", relative_filepath.display());
+                continue;
+            }
+            Some(pipeline) => jobs.push(pipeline.to_job(&abs_filepath, &abs_project_root)),
         }
     }
-    info!("Done.");
+
+    let mut resources = HashMap::new();
+    // 各パイプラインごとに(各Jobごとではない)必要なリソースを事前読込する
+    for pipeline in config.pipelines.iter() {
+        resources.insert(
+            &pipeline.name,
+            pipeline
+                .prefetch_resources(&abs_project_root)
+                .with_context(|| {
+                    format!(
+                        "failed to prefetch files for pipeline \"{}\"",
+                        pipeline.name
+                    )
+                })?,
+        );
+    }
+
+    for job in jobs {
+        job.execute(resources.get(&&job.pipeline().name).expect(&format!(
+            "could not find prefetched resource for pipeline \"{}\"",
+            job.pipeline().name
+        )))
+        .with_context(|| {
+            format!(
+                "failed to complete job for pipeline \"{}\" and entry file \"{}\"",
+                job.pipeline().name,
+                job.input_path().display()
+            )
+        })?;
+    }
+
     Ok(())
 }
 
-#[tracing::instrument]
+#[tracing::instrument(ret)]
 pub fn init(project_root: &Path) -> io::Result<()> {
-    let pages = directory::get_pages_directory(project_root);
-    fs::create_dir_all(&pages)?;
-    fs::write(
-        pages.join("sample.md"),
-        include_str!("../resources/sample.md"),
-    )?;
-    fs::write(
-        pages.join("style.css"),
-        include_str!("../resources/style.css"),
-    )?;
-    fs::create_dir_all(pages.join("sub_dir"))?;
-    fs::write(
-        pages.join("sub_dir/sample2.md"),
-        include_str!("../resources/sample2.md"),
-    )?;
-    info!("setup pages directory: {}", pages.display());
-
-    let templates = directory::get_templates_directory(project_root);
-    fs::create_dir_all(&templates)?;
-    fs::write(
-        templates.join("page.html.hbs"),
-        include_str!("../resources/page.html.hbs"),
-    )?;
-    info!("setup templates directory: {}", templates.display());
-
-    let output = directory::get_output_directory(project_root);
-    fs::create_dir_all(&output)?;
-    info!("setup output directory: {}", output.display());
-
-    let config_file = directory::get_project_config_path(project_root);
-    let config = ProjectConfig::default();
-    let config_json = serde_json::to_string_pretty(&config)?;
-    fs::write(&config_file, config_json)?;
-    info!("setup project config file: {}", config_file.display());
-
-    let gitignore = project_root.join(".gitignore");
-    fs::write(&gitignore, include_str!("../resources/gitignore"))?;
-    info!("setup .gitignore file: {}", gitignore.display());
-
-    info!("setup done.");
-
-    println!();
-    println!("Setup done. To build website, run:");
-    println!();
-    println!("  cd {}", project_root.display());
-    println!("  tempura build .");
-    println!();
+    println!("not implemented yet");
 
     Ok(())
 }

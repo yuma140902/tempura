@@ -1,53 +1,56 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
+use crate::{
+    pipeline::{Entry, EntryType, EnumLoader, EnumTransformer, Pipeline, Step},
+    transformer::TemplateRenderer,
+};
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ProjectConfig {
-    pub generator: Generator,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Generator {
-    pub rules: Vec<GeneratorRule>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct GeneratorRule {
-    #[serde(rename = "match", with = "serde_regex")]
-    pub match_: Regex,
-    pub generator: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub export_base: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub export_extension: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub template: Option<String>,
+    pub pipelines: Vec<Pipeline>,
+    pub output_base_directory: String,
 }
 
 impl Default for ProjectConfig {
     fn default() -> Self {
         Self {
-            generator: Generator {
-                rules: vec![GeneratorRule {
-                    match_: Regex::new(".*[.]md").unwrap(),
-                    generator: "handlebars".to_owned(),
-                    export_base: None,
-                    export_extension: Some("html".to_owned()),
-                    template: Some("src/templates/page.html.hbs".to_owned()),
-                }],
-            },
-        }
-    }
-}
-
-impl Default for GeneratorRule {
-    fn default() -> Self {
-        Self {
-            match_: Regex::new(".*").unwrap(),
-            generator: "echo".to_owned(),
-            export_base: None,
-            export_extension: None,
-            template: None,
+            pipelines: vec![
+                Pipeline {
+                    name: "markdown to html".to_string(),
+                    entry: Entry {
+                        match_regex: Regex::new(".*[.]md").unwrap(),
+                        type_: EntryType::TextWithFrontmatter,
+                    },
+                    steps: vec![
+                        Step::Load {
+                            path: "src/templates/default.html.hbs".into(),
+                            key: "default_template".to_string(),
+                            with: EnumLoader::Template,
+                        },
+                        Step::Transform {
+                            input: "entry".to_string(),
+                            output: "template_result".to_string(),
+                            with: EnumTransformer::TemplateRenderer(TemplateRenderer {
+                                template_key: "default".to_string(),
+                            }),
+                        },
+                    ],
+                    output_extension: Some("html".to_string()),
+                    output_key: "template_result".to_string(),
+                },
+                Pipeline {
+                    name: "static resources".to_string(),
+                    entry: Entry {
+                        match_regex: Regex::new(".*").unwrap(),
+                        type_: EntryType::Blob,
+                    },
+                    steps: vec![],
+                    output_extension: None,
+                    output_key: "entry".to_string(),
+                },
+            ],
+            output_base_directory: "public".to_string(),
         }
     }
 }

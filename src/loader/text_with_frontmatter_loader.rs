@@ -6,7 +6,7 @@ use anyhow::Context;
 use crate::loader::Loader;
 use crate::value::Value;
 
-pub struct FrontmatterLoader;
+pub struct TextWithFrontmatterLoader;
 
 /// Decompose the input into front matter and content portions.
 fn decompose_frontmatter(text: &str) -> (Option<String>, Cow<'_, str>) {
@@ -17,7 +17,8 @@ fn decompose_frontmatter(text: &str) -> (Option<String>, Cow<'_, str>) {
     }
 }
 
-impl Loader for FrontmatterLoader {
+impl Loader for TextWithFrontmatterLoader {
+    #[tracing::instrument(err, skip_all)]
     fn load(mut reader: impl Read) -> anyhow::Result<Value> {
         let mut buf = String::new();
         reader
@@ -25,19 +26,19 @@ impl Loader for FrontmatterLoader {
             .context("Could not read to string")?;
 
         let (maybe_yaml, content) = decompose_frontmatter(&buf);
-        let yaml = match maybe_yaml {
+        let json: serde_json::Value = match maybe_yaml {
             Some(yaml) => serde_yaml::from_str(&yaml).context("Invalid YAML in front matter")?,
-            None => serde_yaml::Value::default(),
+            None => serde_json::Value::default(),
         };
 
-        let mut map = serde_yaml::Mapping::default();
+        let mut map = serde_json::Map::new();
         map.insert(
-            serde_yaml::Value::String("content".to_string()),
-            serde_yaml::Value::String(content.to_string()),
+            "content".to_string(),
+            serde_json::Value::String(content.to_string()),
         );
-        map.insert(serde_yaml::Value::String("front".to_string()), yaml);
+        map.insert("front".to_string(), json);
 
-        Ok(Value::YAML(serde_yaml::Value::Mapping(map)))
+        Ok(Value::JSON(serde_json::Value::Object(map)))
     }
 }
 
