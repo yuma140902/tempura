@@ -1,8 +1,31 @@
 
+<a name="v0.4.1"></a>
+## [v0.4.1](https://github.com/yuma140902/tempura/compare/v0.4.0...v0.4.1)
+
+> 2023-11-10
+
+### :sparkles: Features
+
+* [`f8953d3`](https://github.com/yuma140902/tempura/commit/f8953d3944ebb1f74a3f6341a697fdcb87770e7d) add StringMatcher (by yuma14)
+
+### :bug: Bug Fixes
+
+* [`c12bcbc`](https://github.com/yuma140902/tempura/commit/c12bcbc5482067912b9dbf94bf5dccad09e55fbc) use `/` as path delimiter on Windows when evaluating StringMatcher (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#84](https://github.com/yuma140902/tempura/issues/84) from yuma140902/update-log
+* Merge pull request [#83](https://github.com/yuma140902/tempura/issues/83) from yuma140902/add-string-matcher
+
+
 <a name="v0.4.0"></a>
 ## [v0.4.0](https://github.com/yuma140902/tempura/compare/v0.3.3...v0.4.0)
 
 > 2023-11-10
+
+### :memo: Documentation Changes
+
+* [`81b889f`](https://github.com/yuma140902/tempura/commit/81b889f56180cca4f18bfec0ddd73d32de2f3797) update CHANGELOG.md for v0.4.0 [skip ci] (by yuma140902)
 
 ### :sparkles: Features
 
@@ -10,6 +33,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#82](https://github.com/yuma140902/tempura/issues/82) from yuma140902/release/v0.4.0
 * Merge pull request [#81](https://github.com/yuma140902/tempura/issues/81) from yuma140902/init-cmd-warning
 * Merge pull request [#80](https://github.com/yuma140902/tempura/issues/80) from yuma140902/fix-resolve-helper
 * Merge pull request [#79](https://github.com/yuma140902/tempura/issues/79) from yuma140902/fix-resolve-helper
