@@ -15,6 +15,7 @@ pub mod pipeline;
 pub mod project_config;
 pub mod store;
 mod template_engine;
+pub mod transformer;
 mod value;
 
 pub use loader::*;

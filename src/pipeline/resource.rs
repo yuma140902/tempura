@@ -36,4 +36,8 @@ impl Resource {
         }
         Ok(Self(map))
     }
+
+    pub fn get_bytes(&self, key: &str) -> Option<&[u8]> {
+        self.0.get(key).map(|v| &v[..])
+    }
 }

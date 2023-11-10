@@ -18,7 +18,10 @@ pub use resource::*;
 pub use step::*;
 use tracing::{debug, info, span, Level};
 
-use crate::{directory, store::Store, BlobLoader, Loader, TextWithFrontmatterLoader, Value};
+use crate::{
+    directory, store::Store, transformer::Transformer, BlobLoader, Loader, TemplateLoader,
+    TextWithFrontmatterLoader, Value,
+};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Pipeline {
@@ -67,6 +70,47 @@ impl Pipeline {
             );
             let _enter = step_span.enter();
             debug!("start");
+            match step {
+                Step::Load { key, with, .. } => {
+                    if let Some(bytes) = resource.get_bytes(key) {
+                        let value = match with {
+                            EnumLoader::Template => TemplateLoader::load(bytes),
+                            EnumLoader::Json => todo!(),
+                        }
+                        .with_context(|| {
+                            format!(
+                                "failed to load {} with {:?} Loader (steps index: {})",
+                                key, self.entry.type_, index
+                            )
+                        })?;
+                        store.set(key.to_string(), value);
+                    } else {
+                        anyhow::bail!("no value prefetched for key {}", key);
+                    }
+                }
+                Step::Transform {
+                    input,
+                    output,
+                    with,
+                } => {
+                    if let Some(input) = store.get(input) {
+                        debug!("transform input type: {}", input.get_type_name());
+                        debug!("tranform input {:?}", input);
+                        let value = match with {
+                            EnumTransformer::TemplateRenderer(template_renderer) => {
+                                template_renderer
+                                    .transform(input, &store)
+                                    .with_context(|| format!("transformer failed"))?
+                            }
+                        };
+                        debug!("tranform output {:?}", value);
+                        debug!("transform output type: {}", value.get_type_name());
+                        store.set(output.to_string(), value);
+                    } else {
+                        anyhow::bail!("no value found in the store for input key {}", input,)
+                    }
+                }
+            }
             // TODO: stepの処理
             debug!("done");
         }
@@ -78,7 +122,7 @@ impl Pipeline {
                 value => {
                     anyhow::bail!(
                         "output value type should be string or bytes, but it was {} (output_key={})",
-                        get_value_type_name(&value),
+                        value.get_type_name(),
                         self.output_key
                     )
                 }
@@ -112,23 +156,5 @@ impl Pipeline {
             output_path: self.get_output_path(&input_path, &project_root),
             pipeline: &self,
         }
-    }
-}
-
-fn get_value_type_name(value: &Value) -> &'static str {
-    match value {
-        Value::Bytes(_) => "bytes",
-        Value::JSON(json) => get_json_type_name(json),
-    }
-}
-
-fn get_json_type_name(json: &serde_json::Value) -> &'static str {
-    match json {
-        serde_json::Value::Null => "null",
-        serde_json::Value::Bool(_) => "bool",
-        serde_json::Value::Number(_) => "number",
-        serde_json::Value::String(_) => "string",
-        serde_json::Value::Array(_) => "array",
-        serde_json::Value::Object(_) => "object",
     }
 }

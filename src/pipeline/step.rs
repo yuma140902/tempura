@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
+use crate::transformer::TemplateRenderer;
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub enum Step {
@@ -27,5 +29,5 @@ pub enum EnumLoader {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(tag = "transformer")]
 pub enum EnumTransformer {
-    TemplateRenderer { template_name: String },
+    TemplateRenderer(TemplateRenderer),
 }

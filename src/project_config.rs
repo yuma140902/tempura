@@ -1,7 +1,10 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::pipeline::{Entry, EntryType, EnumLoader, EnumTransformer, Pipeline, Step};
+use crate::{
+    pipeline::{Entry, EntryType, EnumLoader, EnumTransformer, Pipeline, Step},
+    transformer::TemplateRenderer,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ProjectConfig {
@@ -28,9 +31,9 @@ impl Default for ProjectConfig {
                         Step::Transform {
                             input: "entry".to_string(),
                             output: "template_result".to_string(),
-                            with: EnumTransformer::TemplateRenderer {
-                                template_name: "default".to_string(),
-                            },
+                            with: EnumTransformer::TemplateRenderer(TemplateRenderer {
+                                template_key: "default".to_string(),
+                            }),
                         },
                     ],
                     output_extension: Some("html".to_string()),
