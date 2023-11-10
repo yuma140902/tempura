@@ -115,7 +115,7 @@ impl Pipeline {
                             EnumTransformer::TemplateRenderer(t) => t.transform(&input, &store),
                             EnumTransformer::JsonPath(t) => t.transform(&input, &store),
                             EnumTransformer::JsonPathAll(t) => t.transform(&input, &store),
-                            EnumTransformer::TextAsTemplate(t) => t.transform(&input, &store),
+                            EnumTransformer::Reloader(t) => t.transform(&input, &store),
                         }
                         .with_context(|| "transformer failed".to_string())?;
                         debug!("transform output type: {}", value.get_type_name());
