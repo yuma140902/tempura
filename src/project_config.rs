@@ -22,18 +22,19 @@ impl Default for ProjectConfig {
                     steps: vec![
                         Step::Load {
                             path: "src/templates/default.html.hbs".into(),
-                            name: "default_template".to_string(),
+                            key: "default_template".to_string(),
                             with: EnumLoader::Template,
                         },
                         Step::Transform {
                             input: "entry".to_string(),
-                            output: "entry".to_string(),
+                            output: "template_result".to_string(),
                             with: EnumTransformer::TemplateRenderer {
                                 template_name: "default".to_string(),
                             },
                         },
                     ],
                     output_extension: Some("html".to_string()),
+                    output_key: "template_result".to_string(),
                 },
                 Pipeline {
                     name: "static resources".to_string(),
@@ -43,6 +44,7 @@ impl Default for ProjectConfig {
                     },
                     steps: vec![],
                     output_extension: None,
+                    output_key: "entry".to_string(),
                 },
             ],
             output_base_directory: "public".to_string(),

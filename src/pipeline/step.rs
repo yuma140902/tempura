@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 pub enum Step {
     Load {
         path: PathBuf,
-        name: String,
+        key: String,
         with: EnumLoader,
     },
     Transform {

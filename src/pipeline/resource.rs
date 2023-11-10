@@ -2,7 +2,7 @@ use std::{collections::HashMap, fs, path::Path};
 
 use anyhow::Context;
 use path_absolutize::Absolutize;
-use tracing::info;
+use tracing::{debug, info, span, Level};
 
 use super::Pipeline;
 
@@ -20,13 +20,16 @@ impl Resource {
         let project_root = project_root.as_ref();
         for step in &pipeline.steps {
             match step {
-                super::Step::Load { path, name, .. } => {
+                super::Step::Load { path, key, .. } => {
+                    let load_span = span!(Level::INFO, "prefetch", key = key, path = path.to_str());
+                    let _enter = load_span.enter();
+                    info!("start");
                     let path = path.absolutize_from(&project_root).unwrap();
-
-                    info!("prefetching resource {}", path.display());
+                    debug!("absolute path {}", path.display());
                     let bytes = fs::read(&path)
                         .with_context(|| format!("failed to load file {}", path.display()))?;
-                    map.insert(name.to_string(), bytes);
+                    map.insert(key.to_string(), bytes);
+                    info!("done");
                 }
                 _ => {}
             }

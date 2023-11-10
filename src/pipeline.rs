@@ -5,6 +5,7 @@ mod step;
 
 use std::{
     fs,
+    io::Write,
     path::{Path, PathBuf},
 };
 
@@ -15,9 +16,9 @@ pub use entry::*;
 pub use job::*;
 pub use resource::*;
 pub use step::*;
-use tracing::info;
+use tracing::{debug, error, info, span, Level};
 
-use crate::{directory, store::Store, BlobLoader, Loader, TextWithFrontmatterLoader};
+use crate::{directory, store::Store, BlobLoader, Loader, TextWithFrontmatterLoader, Value};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Pipeline {
@@ -26,6 +27,7 @@ pub struct Pipeline {
     pub steps: Vec<Step>,
     // TODO: もっと柔軟に出力パスを指定できるようにする
     pub output_extension: Option<String>,
+    pub output_key: String,
 }
 
 impl Pipeline {
@@ -52,12 +54,10 @@ impl Pipeline {
         let input_path = input_path.as_ref();
         let output_path = output_path.as_ref();
         info!(
-            "start pipeline \"{}\" {} -> {}",
-            self.name,
+            "start pipeline {} -> {}",
             input_path.display(),
             output_path.display(),
         );
-        // TODO: パイプラインの中身を実装
 
         let mut store = Store::new();
 
@@ -79,6 +79,53 @@ impl Pipeline {
         })?;
         store.set("entry".to_string(), value);
         info!("done loading entry");
+
+        for (index, step) in self.steps.iter().enumerate() {
+            let step_span = span!(
+                Level::INFO,
+                "step",
+                index = index + 1,
+                max = self.steps.len()
+            );
+            let _enter = step_span.enter();
+            info!("start");
+            // TODO: stepの処理
+            info!("done");
+        }
+
+        let bytes = match store.get(&self.output_key) {
+            Some(output_value) => match output_value {
+                Value::JSON(serde_json::Value::String(string)) => string.as_bytes(),
+                Value::Bytes(bytes) => bytes,
+                value => {
+                    anyhow::bail!(
+                        "output value type should be string or bytes, but it was {} (output_key={})",
+                        get_value_type_name(value),
+                        self.output_key
+                    )
+                }
+            },
+            None => {
+                anyhow::bail!("no output value found output_key={}", self.output_key);
+            }
+        };
+
+        if let Some(parent) = output_path.parent() {
+            debug!("create parent directory");
+            fs::create_dir_all(parent)
+                .with_context(|| format!("failed to create directory \"{}\"", parent.display()))?;
+        }
+        let mut output_file = fs::OpenOptions::new()
+            .write(true)
+            .create(true)
+            .append(false)
+            .open(&output_path)
+            .with_context(|| format!("failed to open output file \"{}\"", output_path.display()))?;
+        info!("start writing output file \"{}\"", output_path.display());
+        output_file
+            .write_all(bytes)
+            .with_context(|| format!("failed to write file \"{}\"", output_path.display()))?;
+        info!("done writing output file");
 
         Ok(())
     }
@@ -104,5 +151,23 @@ impl Pipeline {
             output_path: self.get_output_path(&input_path, &project_root),
             pipeline: &self,
         }
+    }
+}
+
+fn get_value_type_name(value: &Value) -> &'static str {
+    match value {
+        Value::Bytes(_) => "bytes",
+        Value::JSON(json) => get_json_type_name(json),
+    }
+}
+
+fn get_json_type_name(json: &serde_json::Value) -> &'static str {
+    match json {
+        serde_json::Value::Null => "null",
+        serde_json::Value::Bool(_) => "bool",
+        serde_json::Value::Number(_) => "number",
+        serde_json::Value::String(_) => "string",
+        serde_json::Value::Array(_) => "array",
+        serde_json::Value::Object(_) => "object",
     }
 }
