@@ -6,7 +6,7 @@
 [![](https://img.shields.io/crates/v/tempura?color=blue)](https://crates.io/crates/tempura)
 [![](https://img.shields.io/docsrs/tempura)](https://docs.rs/tempura/)
 
-Tempura is a Static Site Generator (SSG) written in Rust. It can generate HTML from Markdown documents and Handlebars templates. It can also handle static content including images and CSS files, and resolve paths accurately.
+Tempura is a pipeline-based Static Site Generator (SSG) written in Rust. You can define pipelines to generate your site from various resources such as Markdown, JSON, plain text, [Handlebars](https://handlebarsjs.com/) templates, pictures, etc.
 
 ## Installation
 
@@ -21,7 +21,7 @@ cargo install tempura
 You can download a binary archive from [releases page](https://github.com/yuma140902/tempura/releases).
 
 ```sh
-# run one of the following to download binary archive
+# Run one of the following to download binary archive
 wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-aarch64-apple-darwin.tar.gz
 wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-aarch64-unknown-linux-gnu.tar.gz
 wget https://github.com/yuma140902/tempura/releases/latest/download/tempura-aarch64-unknown-linux-musl.tar.gz
@@ -41,21 +41,27 @@ cargo binstall tempura
 
 ## Example
 
-### WebTools
+> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.4.x. Please wait for updates.
 
-- Repo: <https://github.com/yuma140902/webtools>
-- Generated website: <https://www.yuma14.net/webtools/>
+### yuma14.net
+
+- Repo: <https://github.com/yuma140902/yuma140902.github.io/
+- Generated website: <https://www.yuma14.net/>
 
 ### tempura-example
 
 - Repo: <https://github.com/yuma140902/tempura-example>
-- Generated website: <https://yuma140902.github.io/tempura-example/sample.html>
+- Generated website: <https://yuma14.net/tempura-example/sample.html>
 
 ## Documentation
 
-https://yuma140902.github.io/tempura-doc/
+> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.4.x. Please wait for updates.
+
+https://yuma14.net/tempura-doc/
 
 ## General Usage
+
+> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.4.x. Please wait for updates.
 
 ### 1. Setup project
 
