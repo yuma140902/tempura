@@ -1,9 +1,7 @@
-
-
 use handlebars::Handlebars;
 use tracing::{debug, error, warn};
 
-use crate::{handlebars_helpers};
+use crate::handlebars_helpers;
 
 /// TemplateEngine is a wrapper for Handlebars and processes templates and [`Value`](crate::Value)s.
 pub struct TemplateEngine(Handlebars<'static>);

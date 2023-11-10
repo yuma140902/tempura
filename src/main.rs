@@ -3,7 +3,7 @@ use tempura::cli::{Cli, Commands};
 use tracing::debug;
 
 fn verbose_to_level(verbose: u8) -> tracing::Level {
-    if verbose <= 0 {
+    if verbose == 0 {
         #[cfg(debug_assertions)]
         return tracing::Level::DEBUG;
         #[cfg(not(debug_assertions))]
