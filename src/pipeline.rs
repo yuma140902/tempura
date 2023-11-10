@@ -101,12 +101,11 @@ impl Pipeline {
                     if let Some(input) = store.get_combined(input) {
                         debug!("transform input type: {}", input.get_type_name());
                         let value = match with {
-                            EnumTransformer::TemplateRenderer(template_renderer) => {
-                                template_renderer
-                                    .transform(&input, &store)
-                                    .with_context(|| "transformer failed".to_string())?
-                            }
-                        };
+                            EnumTransformer::TemplateRenderer(t) => t.transform(&input, &store),
+                            EnumTransformer::JsonPath(t) => t.transform(&input, &store),
+                            EnumTransformer::JsonPathAll(t) => t.transform(&input, &store),
+                        }
+                        .with_context(|| "transformer failed".to_string())?;
                         debug!("transform output type: {}", value.get_type_name());
                         store.set(output.to_string(), value);
                     } else {
