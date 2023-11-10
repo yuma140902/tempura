@@ -68,7 +68,9 @@ impl Pipeline {
             debug!("start");
             match step {
                 Step::Load { key, with, .. } => {
-                    if let Some(bytes) = resource.get_bytes(key) {
+                    if let Some(value) = resource.get_value(&index) {
+                        store.set(key.to_string(), value.clone());
+                    } else if let Some(bytes) = resource.get_bytes(&index) {
                         let value = match with {
                             EnumLoader::Template => TemplateLoader::load(bytes),
                             EnumLoader::Json => todo!(),
