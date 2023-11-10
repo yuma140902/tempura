@@ -47,7 +47,7 @@ pub fn resolve(
     let output_directory = directory::get_output_directory(project_root);
 
     debug!("cwd = {}", cwd.display());
-    let abs_cwd = cwd.absolutize_from(&project_root).map_err(|e| {
+    let abs_cwd = cwd.absolutize_from(project_root).map_err(|e| {
         RenderError::new(format!("failed to absolutize cwd {} : {e}", cwd.display()))
     })?;
     debug!("abs_cwd = {}", abs_cwd.display());
@@ -67,10 +67,10 @@ pub fn resolve(
     })?;
     debug!("abs_output_path = {}", abs_output_path.display());
 
-    let rel_output_path = directory::get_relative_path(abs_output_path, &output_directory);
+    let rel_output_path = directory::get_relative_path(abs_output_path, output_directory);
     debug!("rel_output_path = {}", rel_output_path.display());
 
-    let output_str = rel_output_path.to_string_lossy().replace("\\", "/");
+    let output_str = rel_output_path.to_string_lossy().replace('\\', "/");
     write!(out, "{}", output_str)?;
     Ok(())
 }
