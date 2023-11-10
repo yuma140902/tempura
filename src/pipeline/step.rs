@@ -23,6 +23,7 @@ pub enum Step {
 #[serde(tag = "loader")]
 pub enum EnumLoader {
     TextWithFrontmatter,
+    Text,
     Template,
     Json,
     Blob,

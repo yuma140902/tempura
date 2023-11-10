@@ -16,7 +16,7 @@ use tracing::{debug, info, span, Level};
 
 use crate::{
     directory, store::Store, transformer::Transformer, BlobLoader, Loader, TemplateLoader,
-    TextWithFrontmatterLoader, Value,
+    TextLoader, TextWithFrontmatterLoader, Value,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -53,6 +53,7 @@ impl Pipeline {
             EnumLoader::Json => todo!(),
             EnumLoader::Blob => BlobLoader::load(&entry_bytes[..]),
             EnumLoader::Template => TemplateLoader::load(&entry_bytes[..]),
+            EnumLoader::Text => TextLoader::load(&entry_bytes[..]),
         }
         .with_context(|| format!("failed to load entry with {:?} Loader", self.entry.type_))?;
         store.set("entry".to_string(), value);
@@ -79,6 +80,7 @@ impl Pipeline {
                                 TextWithFrontmatterLoader::load(bytes)
                             }
                             EnumLoader::Blob => BlobLoader::load(bytes),
+                            EnumLoader::Text => TextLoader::load(bytes),
                         }
                         .with_context(|| {
                             format!(
