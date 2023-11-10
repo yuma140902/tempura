@@ -4,7 +4,7 @@ use anyhow::Context;
 use path_absolutize::Absolutize;
 use tracing::{debug, info, span, Level};
 
-use crate::{BlobLoader, Loader, TemplateLoader, TextLoader, TextWithFrontmatterLoader, Value};
+use crate::{BlobLoader, JsonLoader, Loader, TemplateLoader, TextWithFrontmatterLoader, Value};
 
 use super::Pipeline;
 
@@ -42,12 +42,12 @@ impl Resource {
                 let bytes = &byte_map.get(&index).unwrap()[..];
                 let value = match with {
                     crate::pipeline::EnumLoader::Template => TemplateLoader::load(bytes),
-                    crate::pipeline::EnumLoader::Json => todo!(),
+                    crate::pipeline::EnumLoader::Json => JsonLoader::load(bytes),
                     crate::pipeline::EnumLoader::TextWithFrontmatter => {
                         TextWithFrontmatterLoader::load(bytes)
                     }
                     crate::pipeline::EnumLoader::Blob => BlobLoader::load(bytes),
-                    crate::pipeline::EnumLoader::Text => TextLoader::load(bytes),
+                    crate::pipeline::EnumLoader::Text => JsonLoader::load(bytes),
                 }
                 .with_context(|| format!("failed to preload with {:?}", with))?;
                 value_map.insert(index, value);

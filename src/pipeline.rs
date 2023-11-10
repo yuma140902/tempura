@@ -15,8 +15,8 @@ pub use step::*;
 use tracing::{debug, info, span, Level};
 
 use crate::{
-    directory, store::Store, transformer::Transformer, BlobLoader, Loader, TemplateLoader,
-    TextLoader, TextWithFrontmatterLoader, Value,
+    directory, store::Store, transformer::Transformer, BlobLoader, JsonLoader, Loader,
+    TemplateLoader, TextWithFrontmatterLoader, Value,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -50,10 +50,10 @@ impl Pipeline {
         debug!("start loading entry with {:?} Loader", self.entry.type_);
         let value = match self.entry.type_ {
             EnumLoader::TextWithFrontmatter => TextWithFrontmatterLoader::load(&entry_bytes[..]),
-            EnumLoader::Json => todo!(),
+            EnumLoader::Json => JsonLoader::load(&entry_bytes[..]),
             EnumLoader::Blob => BlobLoader::load(&entry_bytes[..]),
             EnumLoader::Template => TemplateLoader::load(&entry_bytes[..]),
-            EnumLoader::Text => TextLoader::load(&entry_bytes[..]),
+            EnumLoader::Text => JsonLoader::load(&entry_bytes[..]),
         }
         .with_context(|| format!("failed to load entry with {:?} Loader", self.entry.type_))?;
         store.set("entry".to_string(), value);
@@ -75,12 +75,12 @@ impl Pipeline {
                     } else if let Some(bytes) = resource.get_bytes(&index) {
                         let value = match with {
                             EnumLoader::Template => TemplateLoader::load(bytes),
-                            EnumLoader::Json => todo!(),
+                            EnumLoader::Json => JsonLoader::load(bytes),
                             EnumLoader::TextWithFrontmatter => {
                                 TextWithFrontmatterLoader::load(bytes)
                             }
                             EnumLoader::Blob => BlobLoader::load(bytes),
-                            EnumLoader::Text => TextLoader::load(bytes),
+                            EnumLoader::Text => JsonLoader::load(bytes),
                         }
                         .with_context(|| {
                             format!(

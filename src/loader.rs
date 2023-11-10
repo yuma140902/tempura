@@ -3,11 +3,13 @@ use std::io::Read;
 use crate::value::Value;
 
 mod blob_loader;
+mod json_loader;
 mod template_loader;
 mod text_loader;
 mod text_with_frontmatter_loader;
 
 pub use blob_loader::*;
+pub use json_loader::*;
 pub use template_loader::*;
 pub use text_loader::*;
 pub use text_with_frontmatter_loader::*;
