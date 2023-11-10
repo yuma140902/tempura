@@ -44,7 +44,12 @@ impl Pipeline {
         ret
     }
 
-    fn execute(&self, entry_bytes: Vec<u8>, resource: &Resource) -> anyhow::Result<Vec<u8>> {
+    fn execute(
+        &self,
+        entry_bytes: Vec<u8>,
+        resource: &Resource,
+        entry_directory: Option<String>,
+    ) -> anyhow::Result<Vec<u8>> {
         let mut store = Store::new();
 
         debug!("start loading entry with {:?} Loader", self.entry.type_);
@@ -57,6 +62,12 @@ impl Pipeline {
         }
         .with_context(|| format!("failed to load entry with {:?} Loader", self.entry.type_))?;
         store.set("entry".to_string(), value);
+        if let Some(entry_directory) = entry_directory {
+            store.set(
+                "___entry_directory".to_string(),
+                Value::JSON(serde_json::Value::String(entry_directory)),
+            );
+        }
         debug!("finish loading entry");
 
         for (index, step) in self.steps.iter().enumerate() {

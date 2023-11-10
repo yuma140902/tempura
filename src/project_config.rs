@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     pipeline::{Entry, EnumLoader, EnumTransformer, InputKey, Pipeline, Step},
-    transformer::TemplateRenderer,
+    transformer::{CurrentDirectory, TemplateRenderer},
 };
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -32,6 +32,7 @@ impl Default for ProjectConfig {
                             output: "template_result".to_string(),
                             with: EnumTransformer::TemplateRenderer(TemplateRenderer {
                                 template_key: "default".to_string(),
+                                current_directory: Some(CurrentDirectory::EntryDirectory),
                             }),
                         },
                     ],

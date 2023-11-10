@@ -1,5 +1,8 @@
+use std::path::PathBuf;
+
 use anyhow::Context;
 use serde::{Deserialize, Serialize};
+use tracing::warn;
 
 use crate::{store::Store, TemplateEngine, Value};
 
@@ -8,6 +11,14 @@ use super::Transformer;
 #[derive(Debug, Deserialize, Serialize)]
 pub struct TemplateRenderer {
     pub template_key: String,
+    pub current_directory: Option<CurrentDirectory>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(tag = "type")]
+pub enum CurrentDirectory {
+    EntryDirectory,
+    Path { path: String },
 }
 
 impl Transformer for TemplateRenderer {
@@ -38,9 +49,29 @@ impl Transformer for TemplateRenderer {
             )
         }
 
+        let current_directory: Option<String> = if let Some(CurrentDirectory::EntryDirectory) =
+            &self.current_directory
+        {
+            match store.get("___entry_directory") {
+                Some(Value::JSON(serde_json::Value::String(entry_dir))) => Some(entry_dir.into()),
+                Some(_) => {
+                    anyhow::bail!("___entry_directory was not string");
+                }
+                None => {
+                    warn!("___entry_directory was not found");
+                    None
+                }
+            }
+        } else if let Some(CurrentDirectory::Path { path }) = &self.current_directory {
+            Some(path.clone())
+        } else {
+            None
+        };
+
         let result_string = engine
             .render(
                 &self.template_key,
+                &current_directory,
                 &transform_value_for_rendering(value)
                     .context("failed to transform value for rendering")?,
             )
