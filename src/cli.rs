@@ -14,6 +14,14 @@ use clap::{Parser, Subcommand};
 pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,
+
+    #[arg(
+        short = 'v',
+        action = clap::ArgAction::Count,
+        global = true,
+        help = "`-v` to show debug log, `-vv` to show trace log",
+    )]
+    pub verbose: u8,
 }
 
 #[derive(Subcommand, Debug)]
