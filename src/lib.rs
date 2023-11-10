@@ -91,8 +91,12 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
     }
 
     for job in jobs {
-        job.execute(resources.get(&&job.pipeline().name).unwrap_or_else(|| panic!("could not find prefetched resource for pipeline \"{}\"",
-            job.pipeline().name)))
+        job.execute(resources.get(&&job.pipeline().name).unwrap_or_else(|| {
+            panic!(
+                "could not find prefetched resource for pipeline \"{}\"",
+                job.pipeline().name
+            )
+        }))
         .with_context(|| {
             format!(
                 "failed to complete job for pipeline \"{}\" and entry file \"{}\"",
