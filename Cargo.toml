@@ -13,6 +13,7 @@ keywords = ["ssg", "templating", "web", "markdown"]
 
 [dependencies]
 anyhow = "1.0.75"
+chrono = "0.4.31"
 clap = { version = "4.4.7", features = ["derive", "help"] }
 handlebars = "4.5.0"
 matter = "0.1.0-alpha4"
