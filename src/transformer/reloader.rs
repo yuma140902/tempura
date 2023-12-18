@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     pipeline::EnumLoader, BlobLoader, JsonLoader, Loader, TemplateLoader, TextLoader,
-    TextWithFrontmatterLoader, Value,
+    TextWithFrontmatterLoader, Value, YamlLoader,
 };
 
 use super::Transformer;
@@ -29,6 +29,7 @@ impl Transformer for Reloader {
                     EnumLoader::Template => TemplateLoader::load(reader),
                     EnumLoader::Json => JsonLoader::load(reader),
                     EnumLoader::Blob => BlobLoader::load(reader),
+                    EnumLoader::Yaml => YamlLoader::load(reader),
                 }
                 .with_context(|| format!("failed to load value from {}", string))
             }
@@ -38,6 +39,7 @@ impl Transformer for Reloader {
                 EnumLoader::Template => TemplateLoader::load(&bytes[..]),
                 EnumLoader::Json => JsonLoader::load(&bytes[..]),
                 EnumLoader::Blob => BlobLoader::load(&bytes[..]),
+                EnumLoader::Yaml => YamlLoader::load(&bytes[..]),
             }
             .with_context(|| "failed to load value from bytes".to_string()),
             _ => anyhow::bail!(

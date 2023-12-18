@@ -7,11 +7,13 @@ mod json_loader;
 mod template_loader;
 mod text_loader;
 mod text_with_frontmatter_loader;
+mod yaml_loader;
 
 pub use blob_loader::*;
 pub use json_loader::*;
 pub use template_loader::*;
 pub use text_loader::*;
+pub use yaml_loader::*;
 pub use text_with_frontmatter_loader::*;
 
 /// [`Loader`] reads [`Value`] from a file. There are several Loaders depending on the type of file.
