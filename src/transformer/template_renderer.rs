@@ -1,4 +1,5 @@
 use anyhow::Context;
+use chrono::{Datelike, Timelike};
 use serde::{Deserialize, Serialize};
 use tracing::warn;
 
@@ -71,16 +72,45 @@ impl Transformer for TemplateRenderer {
             None
         };
 
+        let value = transform_value_for_rendering(value)
+            .context("failed to transform value for rendering")?;
+        let value = add_build_variables(&value).context("failed to add build variables")?;
+
         let result_string = engine
-            .render(
-                &self.template_key,
-                &current_directory,
-                &transform_value_for_rendering(value)
-                    .context("failed to transform value for rendering")?,
-            )
+            .render(&self.template_key, &current_directory, &value)
             .context("failed to render template")?;
 
         Ok(Value::JSON(serde_json::Value::String(result_string)))
+    }
+}
+
+fn add_build_variables(value: &serde_json::Value) -> anyhow::Result<serde_json::Value> {
+    match value {
+        serde_json::Value::Null
+        | serde_json::Value::Bool(_)
+        | serde_json::Value::Number(_)
+        | serde_json::Value::String(_)
+        | serde_json::Value::Array(_) => {
+            anyhow::bail!("failed to add build variables because value is not JSON object")
+        }
+        serde_json::Value::Object(map) => {
+            let now = chrono::Local::now();
+            let mut build_variables = serde_json::Map::new();
+            build_variables.insert("datetime".to_string(), now.to_rfc3339().into());
+            build_variables.insert("year".to_string(), now.year().into());
+            build_variables.insert("month".to_string(), now.month().into());
+            build_variables.insert("day".to_string(), now.day().into());
+            build_variables.insert("hour".to_string(), now.hour().into());
+            build_variables.insert("minute".to_string(), now.minute().into());
+            build_variables.insert("second".to_string(), now.second().into());
+
+            let mut map = map.clone();
+            map.insert(
+                "build".to_string(),
+                serde_json::Value::Object(build_variables),
+            );
+            Ok(serde_json::Value::Object(map))
+        }
     }
 }
 
