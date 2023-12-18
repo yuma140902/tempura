@@ -41,7 +41,7 @@ cargo binstall tempura
 
 ## Example
 
-> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.4.x. Please wait for updates.
+> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.5.x. Please wait for updates.
 
 ### yuma14.net
 
@@ -55,13 +55,13 @@ cargo binstall tempura
 
 ## Documentation
 
-> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.4.x. Please wait for updates.
+> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.5.x. Please wait for updates.
 
 https://yuma14.net/tempura-doc/
 
 ## General Usage
 
-> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.4.x. Please wait for updates.
+> The content of this section is out of date. It contains information for v0.3.x, but the latest version is v0.5.x. Please wait for updates.
 
 ### 1. Setup project
 
