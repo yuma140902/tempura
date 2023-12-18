@@ -5,7 +5,8 @@ use path_absolutize::Absolutize;
 use tracing::{debug, info, span, Level};
 
 use crate::{
-    BlobLoader, JsonLoader, Loader, TemplateLoader, TextLoader, TextWithFrontmatterLoader, Value, YamlLoader,
+    BlobLoader, JsonLoader, Loader, TemplateLoader, TextLoader, TextWithFrontmatterLoader, Value,
+    YamlLoader,
 };
 
 use super::Pipeline;
