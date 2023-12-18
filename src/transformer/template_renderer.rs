@@ -8,6 +8,7 @@ use self::template_engine::TemplateEngine;
 
 use super::Transformer;
 
+pub mod handlebars_helpers;
 pub mod template_engine;
 
 #[derive(Debug, Deserialize, Serialize)]
