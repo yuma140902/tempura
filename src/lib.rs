@@ -5,23 +5,20 @@ use path_absolutize::Absolutize;
 use tracing::{debug, warn};
 use walkdir::WalkDir;
 
-use crate::project_config::ProjectConfig;
+use crate::{project_config::ProjectConfig, transformer::handlebars_helpers};
 
 pub mod cli;
 pub mod directory;
-pub mod handlebars_helpers;
 mod loader;
 pub mod pipeline;
 pub mod project_config;
 pub mod store;
 mod string_matcher;
-mod template_engine;
 pub mod transformer;
 mod value;
 
 pub use loader::*;
 pub use string_matcher::*;
-pub use template_engine::*;
 pub use value::*;
 
 #[tracing::instrument(ret)]
