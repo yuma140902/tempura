@@ -23,7 +23,6 @@ impl Resource {
         pipeline: &Pipeline,
         project_root: impl AsRef<Path>,
     ) -> anyhow::Result<Self> {
-        let mut byte_map = HashMap::new();
         let mut value_map = HashMap::new();
         let project_root = project_root.as_ref();
         for (index, step) in pipeline.steps.iter().enumerate() {
@@ -36,12 +35,11 @@ impl Resource {
                 debug!("absolute path {}", path.display());
                 let bytes = fs::read(&path)
                     .with_context(|| format!("failed to load file {}", path.display()))?;
-                byte_map.insert(index, bytes);
 
                 info!("finish prefetch");
                 info!("start preload");
 
-                let bytes = &byte_map.get(&index).unwrap()[..];
+                let bytes = &bytes[..];
                 let value = match with {
                     crate::pipeline::EnumLoader::Template => TemplateLoader::load(bytes),
                     crate::pipeline::EnumLoader::Json => JsonLoader::load(bytes),
