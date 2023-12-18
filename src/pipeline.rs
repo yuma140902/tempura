@@ -81,27 +81,9 @@ impl Pipeline {
             let _enter = step_span.enter();
             debug!("start");
             match step {
-                Step::Load { key, with, .. } => {
+                Step::Load { key, .. } => {
                     if let Some(value) = resource.get_value(&index) {
                         store.set(key.to_string(), value.clone());
-                    } else if let Some(bytes) = resource.get_bytes(&index) {
-                        let value = match with {
-                            EnumLoader::Template => TemplateLoader::load(bytes),
-                            EnumLoader::Json => JsonLoader::load(bytes),
-                            EnumLoader::TextWithFrontmatter => {
-                                TextWithFrontmatterLoader::load(bytes)
-                            }
-                            EnumLoader::Blob => BlobLoader::load(bytes),
-                            EnumLoader::Text => TextLoader::load(bytes),
-                            EnumLoader::Yaml => YamlLoader::load(bytes),
-                        }
-                        .with_context(|| {
-                            format!(
-                                "failed to load {} with {:?} Loader (steps index: {})",
-                                key, self.entry.type_, index
-                            )
-                        })?;
-                        store.set(key.to_string(), value);
                     } else {
                         anyhow::bail!("no value prefetched for key {}", key);
                     }

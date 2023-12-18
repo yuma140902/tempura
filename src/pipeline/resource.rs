@@ -15,7 +15,6 @@ use super::Pipeline;
 /// One resource instance is created per [`Pipeline`](crate::pipeline::Pipeline).
 #[derive(Debug)]
 pub struct Resource {
-    byte_map: HashMap<usize, Vec<u8>>,
     value_map: HashMap<usize, Value>,
 }
 
@@ -59,14 +58,7 @@ impl Resource {
                 info!("finish preload");
             }
         }
-        Ok(Self {
-            byte_map,
-            value_map,
-        })
-    }
-
-    pub fn get_bytes(&self, key: &usize) -> Option<&[u8]> {
-        self.byte_map.get(key).map(|v| &v[..])
+        Ok(Self { value_map })
     }
 
     pub fn get_value(&self, key: &usize) -> Option<&Value> {
