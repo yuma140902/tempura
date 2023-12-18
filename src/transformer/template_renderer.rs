@@ -2,9 +2,13 @@ use anyhow::Context;
 use serde::{Deserialize, Serialize};
 use tracing::warn;
 
-use crate::{store::Store, TemplateEngine, Value};
+use crate::{store::Store, Value};
+
+use self::template_engine::TemplateEngine;
 
 use super::Transformer;
+
+pub mod template_engine;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct TemplateRenderer {
