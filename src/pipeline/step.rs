@@ -28,6 +28,7 @@ pub enum EnumLoader {
     Template,
     Json,
     Blob,
+    Yaml,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

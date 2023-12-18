@@ -45,7 +45,7 @@ pub fn build(project_root: &Path) -> anyhow::Result<()> {
 
     let mut jobs = vec![];
 
-    for filepath in WalkDir::new(&src_dir)
+    for filepath in WalkDir::new(src_dir)
         .into_iter()
         .filter_map(|entry| entry.ok())
         .map(|entry| entry.path().to_path_buf())
