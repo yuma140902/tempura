@@ -1,8 +1,46 @@
 
+<a name="v0.5.0"></a>
+## [v0.5.0](https://github.com/yuma140902/tempura/compare/v0.4.3...v0.5.0)
+
+> 2023-12-18
+
+### :wrench: Chores
+
+* [`adec4f6`](https://github.com/yuma140902/tempura/commit/adec4f62913699b26134df80c91b0829c106da9e) update dependencies (by yuma14)
+* [`c9c80bc`](https://github.com/yuma140902/tempura/commit/c9c80bc0ff05eced5d113ed025dfdf7727abc6e9) remove finished todo comment (by yuma14)
+* [`2b450f0`](https://github.com/yuma140902/tempura/commit/2b450f05df336c03cf18b193066a2424e65a3b5d) format (by yuma14)
+
+### :sparkles: Features
+
+* [`e373fbb`](https://github.com/yuma140902/tempura/commit/e373fbb0ba825b68c5eb924103ee627a7e7f0f6d) add build variables (by yuma14)
+* [`52fe94f`](https://github.com/yuma140902/tempura/commit/52fe94f1e0ace7b51eba1172d1ad846b0c4a7c55) add YamlLoader (by yuma14)
+
+### :recycle: Code Refactoring
+
+* [`3419f2f`](https://github.com/yuma140902/tempura/commit/3419f2f34f887c63c60abcff260ec58016c7034d) move `handlebars_helpers` (by yuma14)
+* [`11c7a58`](https://github.com/yuma140902/tempura/commit/11c7a58d16f7a06b1b02403fc32bf0eecf3619bc) move `template_engine` (by yuma14)
+* [`c8c41a9`](https://github.com/yuma140902/tempura/commit/c8c41a9ad3ee169db55d476b09d8225b37cb9a48) remove local variable `bytes_map` (by yuma14)
+* [`ec747e2`](https://github.com/yuma140902/tempura/commit/ec747e2e27304a62ded96357ed2b7c18ad95615a) remove byte_map in `Resource` (by yuma14)
+* [`8fe3bcc`](https://github.com/yuma140902/tempura/commit/8fe3bcc801b2a7f083f254163cdc98012fa415b8) clippy fix (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#100](https://github.com/yuma140902/tempura/issues/100) from yuma140902/update-deps
+* Merge pull request [#99](https://github.com/yuma140902/tempura/issues/99) from yuma140902/add-build-variable
+* Merge pull request [#98](https://github.com/yuma140902/tempura/issues/98) from yuma140902/refactor-modules
+* Merge pull request [#97](https://github.com/yuma140902/tempura/issues/97) from yuma140902/refactor-remove-bytes_map_local_variable
+* Merge pull request [#95](https://github.com/yuma140902/tempura/issues/95) from yuma140902/remove-byte-map-from-resource
+* Merge pull request [#94](https://github.com/yuma140902/tempura/issues/94) from yuma140902/add-yaml-loader
+
+
 <a name="v0.4.3"></a>
 ## [v0.4.3](https://github.com/yuma140902/tempura/compare/v0.4.2...v0.4.3)
 
-> 2023-11-10
+> 2023-11-11
+
+### :memo: Documentation Changes
+
+* [`e06dd61`](https://github.com/yuma140902/tempura/commit/e06dd61875d52025aa5f22080ce3d1398dbdea9f) update CHANGELOG.md for v0.4.3 [skip ci] (by yuma140902)
 
 ### :bug: Bug Fixes
 
@@ -10,6 +48,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#90](https://github.com/yuma140902/tempura/issues/90) from yuma140902/release/v0.4.3
 * Merge pull request [#89](https://github.com/yuma140902/tempura/issues/89) from yuma140902/fix-text-loader
 
 
