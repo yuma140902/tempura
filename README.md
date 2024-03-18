@@ -43,8 +43,8 @@ cargo binstall tempura
 
 ### yuma14.net
 
-- Repo: <https://github.com/yuma140902/yuma140902.github.io/>
-- Generated website: <https://www.yuma14.net/>
+- Repo: <https://github.com/yuma140902/yuma14net-old/>
+- Generated website: <https://old.yuma14.net/>
 
 ## Documentation
 
