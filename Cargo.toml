@@ -1,6 +1,6 @@
 [package]
 name = "tempura"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 authors = ["yuma140902"]
 description = "Pipeline-based Static site generator"
