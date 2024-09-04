@@ -17,7 +17,7 @@ pub use text_with_frontmatter_loader::*;
 pub use yaml_loader::*;
 
 /// [`Loader`] reads [`Value`] from a file. There are several Loaders depending on the type of file.
-/// For example, [`FrontmatterLoader`](self::frontmatter_loader::FrontmatterLoader) usually loads markdown files, while [`StaticResourceLoader`](self::static_resource_loader::StaticResourceLoader) loads static resources.
+/// For example, [`TextWithFrontmatterLoader`] usually loads markdown files, while [`BlobLoader`] loads static resources as-is.
 /// Which Loader reads which file is specified by the user in the configuration file `tempura.json`.
 pub trait Loader {
     fn load(reader: impl Read) -> anyhow::Result<Value>;

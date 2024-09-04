@@ -12,7 +12,7 @@ use crate::{
 use super::Pipeline;
 
 /// Resource holds the file contents needed for the build process.
-/// One resource instance is created per [`Pipeline`](crate::pipeline::Pipeline).
+/// One resource instance is created per [`Pipeline`]
 #[derive(Debug)]
 pub struct Resource {
     value_map: HashMap<usize, Value>,
