@@ -1,4 +1,23 @@
 
+<a name="v0.5.2"></a>
+## [v0.5.2](https://github.com/yuma140902/tempura/compare/v0.5.1...v0.5.2)
+
+> 2024-09-04
+
+### :construction_worker: Build System
+
+* [`1e2467f`](https://github.com/yuma140902/tempura/commit/1e2467f25193790069577bb069a45ae095a8b96d) migrate actions/download-artifact from v3 to v4 (by yuma14)
+
+### :memo: Documentation Changes
+
+* [`18bd47f`](https://github.com/yuma140902/tempura/commit/18bd47f5d5bc72e51a302ec6df2827224ba618c6) how to release (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#114](https://github.com/yuma140902/tempura/issues/114) from yuma140902/migrate-download-artifacts-3-4
+* Merge pull request [#113](https://github.com/yuma140902/tempura/issues/113) from yuma140902/doc-how-to-release
+
+
 <a name="v0.5.1"></a>
 ## [v0.5.1](https://github.com/yuma140902/tempura/compare/v0.5.0...v0.5.1)
 
@@ -19,10 +38,12 @@
 
 ### :memo: Documentation Changes
 
+* [`9136cb4`](https://github.com/yuma140902/tempura/commit/9136cb47f050559afd3f8b88bf644eb5f09cca33) update CHANGELOG.md for v0.5.1 [skip ci] (by yuma140902)
 * [`8602592`](https://github.com/yuma140902/tempura/commit/860259257c4831c1f9d37dac2ccd4ce942d1dc9d) fix links in doc (by yuma14)
 
 ### Pull Requests
 
+* Merge pull request [#111](https://github.com/yuma140902/tempura/issues/111) from yuma140902/release/v0.5.1
 * Merge pull request [#110](https://github.com/yuma140902/tempura/issues/110) from yuma140902/enhance-ci
 * Merge pull request [#105](https://github.com/yuma140902/tempura/issues/105) from yuma140902/update-deps-minor
 * Merge pull request [#104](https://github.com/yuma140902/tempura/issues/104) from yuma140902/dependabot/github_actions/dot-github/workflows/actions/download-artifact-4.1.7
