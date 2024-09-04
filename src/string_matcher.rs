@@ -22,14 +22,10 @@ pub enum StringMatcher {
 impl StringMatcher {
     pub fn is_match(&self, string: &str) -> bool {
         match self {
-            StringMatcher::Regex { regex } => regex.is_match(string),
-            StringMatcher::Not { matcher } => !matcher.is_match(string),
-            StringMatcher::All { matchers } => {
-                matchers.iter().all(|matcher| matcher.is_match(string))
-            }
-            StringMatcher::Any { matchers } => {
-                matchers.iter().any(|matcher| matcher.is_match(string))
-            }
+            Self::Regex { regex } => regex.is_match(string),
+            Self::Not { matcher } => !matcher.is_match(string),
+            Self::All { matchers } => matchers.iter().all(|matcher| matcher.is_match(string)),
+            Self::Any { matchers } => matchers.iter().any(|matcher| matcher.is_match(string)),
         }
     }
 }
