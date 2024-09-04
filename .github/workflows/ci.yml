@@ -8,6 +8,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+  RUSTDOCFLAGS: -Dwarnings
 
 jobs:
   build_and_test:
@@ -48,13 +50,16 @@ jobs:
           crate: cargo-all-features
       
       - name: Build
-        run: cargo build-all-features --verbose
+        run: cargo build-all-features --all-targets --workspace --verbose
         
       - name: Test
-        run: cargo test
+        run: cargo test --all-targets --workspace --verbose
       
       - name: Format
         run: cargo fmt --all -- --check
 
       - name: Lint
-        run: cargo clippy --tests --workspace -- -D warnings
+        run: cargo clippy --all-targets --workspace --verbose -- '-Dclippy::all' -Dwarnings '-Dclippy::nursery'
+
+      - name: Lint document
+        run: cargo doc --no-deps --workspace --document-private-items --verbose
