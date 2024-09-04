@@ -1,14 +1,48 @@
 
+<a name="v0.5.1"></a>
+## [v0.5.1](https://github.com/yuma140902/tempura/compare/v0.5.0...v0.5.1)
+
+> 2024-09-04
+
+### Build
+
+* [`2aec83a`](https://github.com/yuma140902/tempura/commit/2aec83a55b7dc9c01d17102aa2aa8fb66b68fcc4) update dependencies minor version (by yuma14)
+
+### :wrench: Chores
+
+* [`c9c85f0`](https://github.com/yuma140902/tempura/commit/c9c85f0ff6551dab6158bbb579419a46622497d5) clippy (by yuma14)
+* [`81fc5b5`](https://github.com/yuma140902/tempura/commit/81fc5b54e4f11de3580d16c2367c8bf59b8932a7) clippy (by yuma14)
+
+### :construction_worker: Build System
+
+* [`77e1b5b`](https://github.com/yuma140902/tempura/commit/77e1b5babdad2cc9b4740aa98dc62cd1242ea171) clippy::nursery を有効にする (by yuma14)
+
+### :memo: Documentation Changes
+
+* [`8602592`](https://github.com/yuma140902/tempura/commit/860259257c4831c1f9d37dac2ccd4ce942d1dc9d) fix links in doc (by yuma14)
+
+### Pull Requests
+
+* Merge pull request [#110](https://github.com/yuma140902/tempura/issues/110) from yuma140902/enhance-ci
+* Merge pull request [#105](https://github.com/yuma140902/tempura/issues/105) from yuma140902/update-deps-minor
+* Merge pull request [#104](https://github.com/yuma140902/tempura/issues/104) from yuma140902/dependabot/github_actions/dot-github/workflows/actions/download-artifact-4.1.7
+* Merge pull request [#109](https://github.com/yuma140902/tempura/issues/109) from yuma140902/clippy-lint
+
+
 <a name="v0.5.0"></a>
 ## [v0.5.0](https://github.com/yuma140902/tempura/compare/v0.4.3...v0.5.0)
 
-> 2023-12-18
+> 2023-12-19
 
 ### :wrench: Chores
 
 * [`adec4f6`](https://github.com/yuma140902/tempura/commit/adec4f62913699b26134df80c91b0829c106da9e) update dependencies (by yuma14)
 * [`c9c80bc`](https://github.com/yuma140902/tempura/commit/c9c80bc0ff05eced5d113ed025dfdf7727abc6e9) remove finished todo comment (by yuma14)
 * [`2b450f0`](https://github.com/yuma140902/tempura/commit/2b450f05df336c03cf18b193066a2424e65a3b5d) format (by yuma14)
+
+### :memo: Documentation Changes
+
+* [`2159c88`](https://github.com/yuma140902/tempura/commit/2159c88784d17647b1a110af43081b69b2cf62d4) update CHANGELOG.md for v0.5.0 [skip ci] (by yuma140902)
 
 ### :sparkles: Features
 
@@ -25,6 +59,7 @@
 
 ### Pull Requests
 
+* Merge pull request [#101](https://github.com/yuma140902/tempura/issues/101) from yuma140902/release/v0.5.0
 * Merge pull request [#100](https://github.com/yuma140902/tempura/issues/100) from yuma140902/update-deps
 * Merge pull request [#99](https://github.com/yuma140902/tempura/issues/99) from yuma140902/add-build-variable
 * Merge pull request [#98](https://github.com/yuma140902/tempura/issues/98) from yuma140902/refactor-modules
