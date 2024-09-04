@@ -2,7 +2,7 @@ use clap::Parser;
 use tempura::cli::{Cli, Commands};
 use tracing::debug;
 
-fn verbose_to_level(verbose: u8) -> tracing::Level {
+const fn verbose_to_level(verbose: u8) -> tracing::Level {
     if verbose == 0 {
         #[cfg(debug_assertions)]
         return tracing::Level::DEBUG;

@@ -50,6 +50,7 @@ impl<'a> Job<'a> {
         let mut output_file = fs::OpenOptions::new()
             .write(true)
             .create(true)
+            .truncate(true)
             .append(false)
             .open(&self.output_path)
             .with_context(|| {
@@ -66,15 +67,15 @@ impl<'a> Job<'a> {
         Ok(())
     }
 
-    pub fn pipeline(&self) -> &Pipeline {
+    pub const fn pipeline(&self) -> &Pipeline {
         self.pipeline
     }
 
-    pub fn input_path(&self) -> &PathBuf {
+    pub const fn input_path(&self) -> &PathBuf {
         &self.input_path
     }
 
-    pub fn output_path(&self) -> &PathBuf {
+    pub const fn output_path(&self) -> &PathBuf {
         &self.output_path
     }
 }

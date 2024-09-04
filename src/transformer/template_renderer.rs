@@ -18,7 +18,7 @@ pub struct TemplateRenderer {
     pub current_directory: Option<CurrentDirectory>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(tag = "type")]
 pub enum CurrentDirectory {
     EntryDirectory,
@@ -53,8 +53,8 @@ impl Transformer for TemplateRenderer {
             )
         }
 
-        let current_directory: Option<String> = if let Some(CurrentDirectory::EntryDirectory) =
-            &self.current_directory
+        let current_directory: Option<String> = if self.current_directory
+            == Some(CurrentDirectory::EntryDirectory)
         {
             match store.get("___entry_directory") {
                 Some(Value::JSON(serde_json::Value::String(entry_dir))) => Some(entry_dir.into()),
