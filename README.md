@@ -50,3 +50,11 @@ cargo binstall tempura
 
 https://yuma14.net/tempura-doc/
 
+## How to make releases
+
+1. `release/v1.2.3` のような名前のブランチを切る
+2. `Cargo.toml` のバージョン番号を更新する
+3. 手元で `cargo build` を実行して `Cargo.lock` を更新する
+4. Pull Request を作る。[pre-release.yml](.github/workflows/pre-release.yml) が実行されて [CHANGELOG.md](CHANGELOG.md) が更新される。
+5. すべてのチェックが通れば Pull Request をクローズする。[release.yml](.github/workflows/release.yml) が実行されて crates.io と GitHub のリリースページにリリースが作られる。
+6. ブランチは削除せずに残しておくものとする
