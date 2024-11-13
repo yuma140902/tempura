@@ -12,7 +12,7 @@ keywords = ["ssg", "templating", "web", "markdown"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.86"
+anyhow = "1.0.93"
 chrono = "0.4.38"
 clap = { version = "4.5.16", features = ["derive", "help"] }
 handlebars = "4.5.0"
