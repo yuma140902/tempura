@@ -15,6 +15,7 @@ pub mod project_config;
 pub mod store;
 mod string_matcher;
 pub mod transformer;
+pub mod downloader;
 mod value;
 
 pub use loader::*;
